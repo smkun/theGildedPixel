@@ -326,28 +326,35 @@
 
 ## Next 5 Tasks to Run
 
-Based on the natural project flow, these are the immediate next tasks to execute:
+Based on current progress (M1.1 - 4/5 tasks complete), these are the immediate next tasks:
 
-1. **Initialize Astro project with TypeScript template** (M1.1)
-   - Command: `npm create astro@latest`
-   - Select: TypeScript + Strict + Tailwind CSS options
+1. **Create directory structure per PLANNING.md** (M1.1) ⭐ NEXT
+   - `/src/content/images/`, `/src/content/collections/`
+   - `/src/images/originals/`
+   - `/src/components/`
+   - Already have: `/src/pages/`, `/src/styles/`
 
 2. **Configure astro.config.mjs for static output** (M1.2)
    - Set `output: 'static'`
-   - Enable `astro:assets` integration
-   - Configure image domains
+   - Enable `astro:assets` integration explicitly
+   - Configure image optimization settings (formats, widths)
+   - Define allowed remote image domains
 
 3. **Configure tailwind.config.js with custom theme** (M1.3)
-   - Set up content paths
-   - Define responsive breakpoints
-   - Enable JIT mode
+   - Note: Tailwind 4.x uses different config format (CSS-based)
+   - Set up content paths for purging
+   - Define responsive breakpoints for gallery grid
+   - Configure custom theme colors if needed
 
-4. **Create directory structure per PLANNING.md** (M1.1)
-   - `/src/content/images/`, `/src/content/collections/`
-   - `/src/images/originals/`
-   - `/src/components/`, `/src/pages/`, `/src/styles/`
+4. **Create global styles file** (M1.3)
+   - Already exists at `/src/styles/global.css`
+   - Add custom Tailwind utilities
+   - Import Tailwind base/components/utilities
+   - Add project-specific global styles
 
 5. **Define images collection schema in config.ts** (M1.4)
    - Create `/src/content/config.ts`
-   - Define Zod schema with all fields from PRD
-   - Add validation rules
+   - Define Zod schema with all fields from PRD:
+     - title, slug, alt, src, width, height, tags[], createdAt, prompt, model, credit
+   - Add validation rules for required fields
+   - Enable TypeScript type generation
