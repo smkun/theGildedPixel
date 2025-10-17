@@ -6,7 +6,7 @@
 - [x] Initialize Astro project with TypeScript template - Completed: 2025-10-16
 - [x] Install Tailwind CSS integration - Completed: 2025-10-16
 - [x] Configure TypeScript compiler options - Completed: 2025-10-16
-- [ ] Create directory structure per PLANNING.md - Completed: ___________
+- [x] Create directory structure per PLANNING.md - Completed: 2025-10-17
 - [x] Initialize Git repository with .gitignore - Completed: 2025-10-16
 
 ### M1.2 - Astro Configuration
@@ -37,7 +37,7 @@
 ### M2.1 - Source Image Setup
 **Note**: 440 AI-generated character art images available in `/SOURCE IMAGES/` directory for migration.
 
-- [ ] Create /src/images/originals/ directory - Completed: ___________
+- [x] Create /src/images/originals/ directory - Completed: 2025-10-17
 - [ ] Migrate sample images from /SOURCE IMAGES/ to /src/images/originals/ - Completed: ___________
 - [ ] Document image naming conventions - Completed: ___________
 - [ ] Verify image metadata (width, height) - Completed: ___________
@@ -328,33 +328,27 @@
 
 ## Next 5 Tasks to Run
 
-Based on current progress (M1.1 - 4/5 tasks complete), these are the immediate next tasks:
+Based on current progress (M1.1 - COMPLETE, 5/5 tasks), these are the immediate next tasks:
 
-1. **Create directory structure per PLANNING.md** (M1.1) ⭐ NEXT
-   - `/src/content/images/`, `/src/content/collections/`
-   - `/src/images/originals/`
-   - `/src/components/`
-   - Already have: `/src/pages/`, `/src/styles/`
-
-2. **Configure astro.config.mjs for static output** (M1.2)
+1. **Configure astro.config.mjs for static output** (M1.2) ⭐ NEXT
    - Set `output: 'static'`
    - Enable `astro:assets` integration explicitly
    - Configure image optimization settings (formats, widths)
    - Define allowed remote image domains
 
-3. **Configure tailwind.config.js with custom theme** (M1.3)
+2. **Configure tailwind.config.js with custom theme** (M1.3)
    - Note: Tailwind 4.x uses different config format (CSS-based)
    - Set up content paths for purging
    - Define responsive breakpoints for gallery grid
    - Configure custom theme colors if needed
 
-4. **Create global styles file** (M1.3)
+3. **Create global styles file** (M1.3)
    - Already exists at `/src/styles/global.css`
    - Add custom Tailwind utilities
    - Import Tailwind base/components/utilities
    - Add project-specific global styles
 
-5. **Define images collection schema in config.ts** (M1.4)
+4. **Define images collection schema in config.ts** (M1.4)
    - Create `/src/content/config.ts`
    - Define Zod schema with all fields from PRD:
      - title, slug, alt, src, width, height, tags[], createdAt, prompt, model, credit
