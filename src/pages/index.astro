@@ -20,11 +20,11 @@ const imageData = allImages.map(img => ({
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>AI Image Gallery</title>
+		<title>The Gilded Pixel</title>
 	</head>
 	<body class="min-h-screen">
 		<div class="container mx-auto px-4 py-8">
-			<h1 class="text-4xl font-bold text-gold mb-8">AI Character Gallery</h1>
+			<h1 class="text-4xl font-bold text-gold mb-8">The Gilded Pixel</h1>
 
 			<!-- Image count -->
 			<p class="text-muted mb-6">{allImages.length} images</p>
@@ -52,20 +52,109 @@ const imageData = allImages.map(img => ({
 		</div>
 
 		<!-- Lightbox Script -->
-		<script define:vars={{ imageData }}>
-			import Lightbox from '../components/Lightbox.ts';
+		<script>
+			// Image data embedded from server
+			const imageData = [
+				{allImages.map((img, i) => (
+					<Fragment>
+						{i > 0 && ','}
+						{JSON.stringify({ src: img.data.src, width: img.data.width, height: img.data.height })}
+					</Fragment>
+				))}
+			];
 
-			// Initialize lightbox
-			const lightbox = new Lightbox(imageData);
-
-			// Attach click handlers to gallery cards
-			const galleryGrid = document.getElementById('gallery-grid');
-			galleryGrid?.addEventListener('click', (e) => {
-				const card = (e.target as HTMLElement).closest('[data-index]');
-				if (card) {
-					const index = parseInt(card.getAttribute('data-index') || '0');
-					lightbox.open(index);
+			// Lightbox class
+			class Lightbox {
+				constructor(images) {
+					this.images = images;
+					this.currentIndex = 0;
+					this.overlay = this.createOverlay();
+					this.imageElement = this.overlay.querySelector('.lightbox-image');
+					this.counterElement = this.overlay.querySelector('.lightbox-counter');
+					this.attachEventListeners();
 				}
+
+				createOverlay() {
+					const overlay = document.createElement('div');
+					overlay.className = 'lightbox-overlay';
+					overlay.style.display = 'none';
+					overlay.innerHTML = `
+						<div class="lightbox-content">
+							<img class="lightbox-image" alt="" />
+							<button class="lightbox-button lightbox-close" aria-label="Close">×</button>
+							<button class="lightbox-button lightbox-prev" aria-label="Previous">‹</button>
+							<button class="lightbox-button lightbox-next" aria-label="Next">›</button>
+							<div class="lightbox-counter"></div>
+						</div>
+					`;
+					document.body.appendChild(overlay);
+					return overlay;
+				}
+
+				attachEventListeners() {
+					this.overlay.querySelector('.lightbox-close').addEventListener('click', () => this.close());
+					this.overlay.querySelector('.lightbox-prev').addEventListener('click', () => this.prev());
+					this.overlay.querySelector('.lightbox-next').addEventListener('click', () => this.next());
+					this.overlay.addEventListener('click', (e) => {
+						if (e.target === this.overlay) this.close();
+					});
+
+					document.addEventListener('keydown', (e) => {
+						if (this.overlay.style.display === 'flex') {
+							if (e.key === 'Escape') this.close();
+							else if (e.key === 'ArrowLeft') this.prev();
+							else if (e.key === 'ArrowRight') this.next();
+						}
+					});
+				}
+
+				open(index) {
+					this.currentIndex = index;
+					this.overlay.style.display = 'flex';
+					setTimeout(() => this.overlay.classList.add('active'), 10);
+					this.updateImage();
+					document.body.style.overflow = 'hidden';
+				}
+
+				close() {
+					this.overlay.classList.remove('active');
+					setTimeout(() => {
+						this.overlay.style.display = 'none';
+						document.body.style.overflow = '';
+					}, 300);
+				}
+
+				prev() {
+					this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+					this.updateImage();
+				}
+
+				next() {
+					this.currentIndex = (this.currentIndex + 1) % this.images.length;
+					this.updateImage();
+				}
+
+				updateImage() {
+					const image = this.images[this.currentIndex];
+					this.imageElement.src = image.src;
+					this.imageElement.width = image.width;
+					this.imageElement.height = image.height;
+					this.counterElement.textContent = `${this.currentIndex + 1} / ${this.images.length}`;
+				}
+			}
+
+			// Initialize when DOM is ready
+			document.addEventListener('DOMContentLoaded', () => {
+				const lightbox = new Lightbox(imageData);
+				const galleryGrid = document.getElementById('gallery-grid');
+
+				galleryGrid.addEventListener('click', (e) => {
+					const card = e.target.closest('[data-index]');
+					if (card) {
+						const index = parseInt(card.getAttribute('data-index'));
+						lightbox.open(index);
+					}
+				});
 			});
 		</script>
 	</body>
