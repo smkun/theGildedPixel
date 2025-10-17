@@ -22,12 +22,13 @@
 
   /* ========== Responsive Breakpoints ========== */
   /* Gallery grid breakpoints optimized for image display */
-  --breakpoint-xs: 360px;     /* Mobile portrait - 1 column */
-  --breakpoint-sm: 540px;     /* Mobile landscape - 2 columns */
-  --breakpoint-md: 720px;     /* Tablet portrait - 2-3 columns */
-  --breakpoint-lg: 960px;     /* Tablet landscape - 3-4 columns */
-  --breakpoint-xl: 1200px;    /* Desktop - 4-5 columns */
-  --breakpoint-2xl: 2048px;   /* Large desktop - 5-6 columns */
+  --breakpoint-xs: 360px;     /* Mobile portrait - 1-2 columns */
+  --breakpoint-sm: 640px;     /* Mobile landscape - 2-3 columns */
+  --breakpoint-md: 768px;     /* Tablet portrait - 3-4 columns */
+  --breakpoint-lg: 1024px;    /* Tablet landscape - 5-6 columns */
+  --breakpoint-xl: 1280px;    /* Desktop - 6-8 columns */
+  --breakpoint-2xl: 1536px;   /* Large desktop - 8-9 columns */
+  --breakpoint-ultra: 1800px; /* Ultra-wide - 9 columns */
 
   /* ========== Typography ========== */
   --font-family-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -85,4 +86,146 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ========== Gallery Grid Utilities ========== */
+
+/* Responsive gallery grid - adapts from 1-9 columns based on viewport */
+.gallery-grid {
+  display: grid;
+  gap: 1rem; /* 16px */
+  grid-template-columns: repeat(1, minmax(0, 1fr)); /* xs: 1 col */
+}
+
+@media (min-width: 640px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* sm: 2 cols */
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* md: 3 cols */
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr)); /* lg: 5 cols */
+  }
+}
+
+@media (min-width: 1280px) {
+  .gallery-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr)); /* xl: 6 cols */
+  }
+}
+
+@media (min-width: 1536px) {
+  .gallery-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr)); /* 2xl: 8 cols */
+  }
+}
+
+@media (min-width: 1800px) {
+  .gallery-grid {
+    grid-template-columns: repeat(9, minmax(0, 1fr)); /* ultra: 9 cols */
+  }
+}
+
+/* Gallery grid with larger gap */
+.gallery-grid-lg {
+  gap: 1.5rem; /* 24px */
+}
+
+/* Masonry-style columns for alternative layout */
+.gallery-masonry {
+  column-gap: 1rem;
+  columns: 1;
+}
+
+@media (min-width: 768px) {
+  .gallery-masonry {
+    columns: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-masonry {
+    columns: 3;
+  }
+}
+
+@media (min-width: 1280px) {
+  .gallery-masonry {
+    columns: 4;
+  }
+}
+
+@media (min-width: 1536px) {
+  .gallery-masonry {
+    columns: 5;
+  }
+}
+
+/* Gallery card - maintains aspect ratio and prevents layout shift */
+.gallery-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  background-color: var(--color-panel);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gallery-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Aspect ratio containers */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-portrait {
+  aspect-ratio: 3 / 4;
+}
+
+.aspect-landscape {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-wide {
+  aspect-ratio: 16 / 9;
+}
+
+/* Featured card span - takes 2x space on larger screens */
+.gallery-featured {
+  grid-column: span 1;
+}
+
+@media (min-width: 1024px) {
+  .gallery-featured {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 1280px) {
+  .gallery-featured {
+    grid-column: span 3;
+  }
+}
+
+/* Image wrapper for responsive images */
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
