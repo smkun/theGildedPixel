@@ -24,11 +24,11 @@
 - [x] Create global styles file - Completed: 2025-10-17
 
 ### M1.4 - Content Collections Schema
-- [ ] Define images collection schema in config.ts - Completed: ___________
-- [ ] Add Zod validation for required fields - Completed: ___________
-- [ ] Define collections schema (optional) - Completed: ___________
-- [ ] Create example image content entry - Completed: ___________
-- [ ] Validate schema with sample data - Completed: ___________
+- [x] Define images collection schema in config.ts - Completed: 2025-10-17
+- [x] Add Zod validation for required fields - Completed: 2025-10-17
+- [x] Define collections schema (optional) - Completed: 2025-10-17
+- [x] Create example image content entry - Completed: 2025-10-17
+- [x] Validate schema with sample data - Completed: 2025-10-17
 
 ---
 
@@ -38,9 +38,9 @@
 **Note**: 440 AI-generated character art images available in `/SOURCE IMAGES/` directory for migration.
 
 - [x] Create /src/images/originals/ directory - Completed: 2025-10-17
-- [ ] Migrate sample images from /SOURCE IMAGES/ to /src/images/originals/ - Completed: ___________
-- [ ] Document image naming conventions - Completed: ___________
-- [ ] Verify image metadata (width, height) - Completed: ___________
+- [x] Migrate sample images from /SOURCE IMAGES/ to /src/images/originals/ - Completed: 2025-10-17
+- [x] Document image naming conventions - Completed: 2025-10-17
+- [x] Verify image metadata (width, height) - Completed: 2025-10-17
 - [ ] Test Git LFS setup (if using) - Completed: ___________
 
 ### M2.2 - Image Component Testing
@@ -335,6 +335,10 @@
 - [ ] Build tag suggestion tool for authoring - Completed: ___________
 - [ ] Create bulk image import script - Completed: ___________
 - [ ] Design content versioning strategy - Completed: ___________
+- [x] Document image naming conventions - Completed: 2025-10-17
+<!-- Created IMAGE_NAMING_CONVENTIONS.md with filename, slug, metadata, and workflow guidelines -->
+- [x] Create image dimension extraction utility - Completed: 2025-10-17
+<!-- Created scripts/get-image-dims.js for automated dimension reading -->
 
 ---
 
