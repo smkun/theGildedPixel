@@ -5,6 +5,13 @@ import { Image } from 'astro:assets';
 
 // Fetch all images from Content Collections
 const allImages = await getCollection('images');
+
+// Prepare image data for lightbox (client-side)
+const imageData = allImages.map(img => ({
+  src: img.data.src,
+  width: img.data.width,
+  height: img.data.height
+}));
 ---
 
 <html lang="en">
@@ -23,9 +30,12 @@ const allImages = await getCollection('images');
 			<p class="text-muted mb-6">{allImages.length} images</p>
 
 			<!-- Gallery Grid -->
-			<div class="gallery-grid">
-				{allImages.map((image) => (
-					<div class="gallery-card aspect-portrait group cursor-pointer">
+			<div class="gallery-grid" id="gallery-grid">
+				{allImages.map((image, index) => (
+					<div
+						class="gallery-card aspect-portrait group cursor-pointer"
+						data-index={index}
+					>
 						<div class="image-wrapper overflow-hidden rounded-lg">
 							<Image
 								src={image.data.src}
@@ -40,5 +50,23 @@ const allImages = await getCollection('images');
 				))}
 			</div>
 		</div>
+
+		<!-- Lightbox Script -->
+		<script define:vars={{ imageData }}>
+			import Lightbox from '../components/Lightbox.ts';
+
+			// Initialize lightbox
+			const lightbox = new Lightbox(imageData);
+
+			// Attach click handlers to gallery cards
+			const galleryGrid = document.getElementById('gallery-grid');
+			galleryGrid?.addEventListener('click', (e) => {
+				const card = (e.target as HTMLElement).closest('[data-index]');
+				if (card) {
+					const index = parseInt(card.getAttribute('data-index') || '0');
+					lightbox.open(index);
+				}
+			});
+		</script>
 	</body>
 </html>
