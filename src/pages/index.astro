@@ -1,5 +1,10 @@
 ---
 import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+// Fetch all images from Content Collections
+const allImages = await getCollection('images');
 ---
 
 <html lang="en">
@@ -12,63 +17,27 @@ import '../styles/global.css';
 	</head>
 	<body class="min-h-screen">
 		<div class="container mx-auto px-4 py-8">
-			<h1 class="text-4xl font-bold text-gold mb-4">AI Image Gallery</h1>
-			<p class="text-muted">Dark-neutral theme with warm metallic accents</p>
+			<h1 class="text-4xl font-bold text-gold mb-8">AI Character Gallery</h1>
 
-			<!-- Theme and grid demonstration -->
-			<div class="mt-8 space-y-8">
-				<!-- UI Components -->
-				<div class="bg-panel border border-border p-6 rounded">
-					<h2 class="text-2xl text-text mb-4">UI Components</h2>
-					<p class="text-muted mb-4">Dark-neutral theme with warm metallic accents</p>
-					<div class="flex gap-4 flex-wrap">
-						<button class="bg-gold text-bg px-4 py-2 rounded hover-brightness-90 min-h-[44px]">Primary CTA</button>
-						<button class="bg-teal text-steel px-4 py-2 rounded hover:bg-gold min-h-[44px]">Secondary</button>
-						<span class="bg-rust/20 text-rust border border-rust/50 px-3 py-2 rounded-full text-sm">Hot Badge</span>
-					</div>
-				</div>
+			<!-- Image count -->
+			<p class="text-muted mb-6">{allImages.length} images</p>
 
-				<!-- Gallery Grid Demo -->
-				<div>
-					<h2 class="text-2xl text-text mb-4">Responsive Gallery Grid</h2>
-					<p class="text-muted mb-4">1-9 columns adaptive: Mobile (1-2) → Tablet (3-5) → Desktop (6-8) → Ultra-wide (9)</p>
-
-					<!-- Gallery grid with placeholder cards -->
-					<div class="gallery-grid gallery-grid-lg">
-						{Array.from({ length: 18 }).map((_, i) => (
-							<div class="gallery-card aspect-portrait">
-								<div class="image-wrapper skeleton-loading">
-									<div class="absolute inset-0 flex items-center justify-center">
-										<span class="text-muted text-sm">Card {i + 1}</span>
-									</div>
-								</div>
-							</div>
-						))}
-
-						<!-- Featured card example (spans multiple columns on large screens) -->
-						<div class="gallery-card gallery-featured aspect-landscape">
-							<div class="image-wrapper bg-gold/10">
-								<div class="absolute inset-0 flex items-center justify-center">
-									<span class="text-gold font-bold">Featured Card</span>
-								</div>
-							</div>
+			<!-- Gallery Grid -->
+			<div class="gallery-grid">
+				{allImages.map((image) => (
+					<div class="gallery-card aspect-portrait group cursor-pointer">
+						<div class="image-wrapper overflow-hidden rounded-lg">
+							<Image
+								src={image.data.src}
+								alt=""
+								width={image.data.width}
+								height={image.data.height}
+								class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+								loading="lazy"
+							/>
 						</div>
 					</div>
-				</div>
-
-				<!-- Grid Info -->
-				<div class="bg-panel border border-border p-4 rounded">
-					<h3 class="text-lg text-text mb-2">Grid Breakpoints</h3>
-					<ul class="text-muted text-sm space-y-1">
-						<li><span class="text-steel">xs (&lt;640px):</span> 1 column</li>
-						<li><span class="text-steel">sm (≥640px):</span> 2 columns</li>
-						<li><span class="text-steel">md (≥768px):</span> 3 columns</li>
-						<li><span class="text-steel">lg (≥1024px):</span> 5 columns</li>
-						<li><span class="text-steel">xl (≥1280px):</span> 6 columns</li>
-						<li><span class="text-steel">2xl (≥1536px):</span> 8 columns</li>
-						<li><span class="text-steel">ultra (≥1800px):</span> 9 columns</li>
-					</ul>
-				</div>
+				))}
 			</div>
 		</div>
 	</body>
