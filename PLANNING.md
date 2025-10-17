@@ -57,6 +57,8 @@ A blazingly fast, static AI image gallery built with Astro and Tailwind CSS that
 ### Image Storage
 **Source**: `/src/images/originals/*.jpg` (local, preferred) or remote URLs with allowed domains
 
+**Note**: Project includes 440 source images in `/SOURCE IMAGES/` directory (character art) that will be migrated to `/src/images/originals/` during M2.1 implementation.
+
 **Flow**:
 ```
 Source Images → astro:assets <Image /> → Build-time Processing (Sharp)
@@ -169,7 +171,9 @@ Source Images → astro:assets <Image /> → Build-time Processing (Sharp)
 - Build tag suggestion UI for content authoring (dev-time only)
 
 ### R1: Build Time Scalability
-**Risk**: With 500+ high-res images, Astro build time may exceed acceptable limits (>5 min)
+**Risk**: With 440 high-res images (confirmed in `/SOURCE IMAGES/`), Astro build time may exceed acceptable limits (>5 min)
+
+**Actual Context**: Project has 440 AI-generated character art images ready for migration.
 
 **Mitigation**:
 - Enable `astro:assets` caching to avoid reprocessing unchanged images

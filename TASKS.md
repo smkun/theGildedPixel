@@ -35,8 +35,10 @@
 ## Milestone 2: Image Pipeline & Asset Management
 
 ### M2.1 - Source Image Setup
+**Note**: 440 AI-generated character art images available in `/SOURCE IMAGES/` directory for migration.
+
 - [ ] Create /src/images/originals/ directory - Completed: ___________
-- [ ] Add 5-10 sample images for testing - Completed: ___________
+- [ ] Migrate sample images from /SOURCE IMAGES/ to /src/images/originals/ - Completed: ___________
 - [ ] Document image naming conventions - Completed: ___________
 - [ ] Verify image metadata (width, height) - Completed: ___________
 - [ ] Test Git LFS setup (if using) - Completed: ___________

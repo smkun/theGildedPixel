@@ -349,6 +349,7 @@ Optional markdown content for extended description.
 - Tailwind CSS 4.1.14 integrated via `@tailwindcss/vite` plugin
 - Build test passed successfully (401ms, 1 page generated)
 - Initial commit created: `e576b7e` with 15 files
+- **Source Images**: 440 AI-generated character art images ready in `/SOURCE IMAGES/` directory
 
 **Decisions Made:**
 - Use Astro 5.x (newer version, backward compatible with 4.x requirements)
