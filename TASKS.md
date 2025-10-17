@@ -17,11 +17,11 @@
 - [x] Configure build output directory - Completed: 2025-10-17
 
 ### M1.3 - Tailwind Setup
-- [ ] Configure tailwind.config.js with custom theme - Completed: ___________
-- [ ] Add responsive breakpoints for gallery grid - Completed: ___________
-- [ ] Enable JIT mode for minimal CSS output - Completed: ___________
-- [ ] Configure content paths for purging - Completed: ___________
-- [ ] Create global styles file - Completed: ___________
+- [x] Configure tailwind.config.js with custom theme - Completed: 2025-10-17
+- [x] Add responsive breakpoints for gallery grid - Completed: 2025-10-17
+- [x] Enable JIT mode for minimal CSS output - Completed: 2025-10-17
+- [x] Configure content paths for purging - Completed: 2025-10-17
+- [x] Create global styles file - Completed: 2025-10-17
 
 ### M1.4 - Content Collections Schema
 - [ ] Define images collection schema in config.ts - Completed: ___________
@@ -332,23 +332,30 @@
 
 ## Next 5 Tasks to Run
 
-Based on current progress (M1.1 - COMPLETE, M1.2 - COMPLETE), these are the immediate next tasks:
+Based on current progress (M1.1, M1.2, M1.3 - COMPLETE), these are the immediate next tasks:
 
-1. **Configure tailwind.config.js with custom theme** (M1.3) ⭐ NEXT
-   - Note: Tailwind 4.x uses different config format (CSS-based)
-   - Set up content paths for purging
-   - Define responsive breakpoints for gallery grid
-   - Configure custom theme colors if needed
-
-2. **Create global styles file** (M1.3)
-   - Already exists at `/src/styles/global.css`
-   - Add custom Tailwind utilities
-   - Import Tailwind base/components/utilities
-   - Add project-specific global styles
-
-3. **Define images collection schema in config.ts** (M1.4)
+1. **Define images collection schema in config.ts** (M1.4) ⭐ NEXT
    - Create `/src/content/config.ts`
    - Define Zod schema with all fields from PRD:
      - title, slug, alt, src, width, height, tags[], createdAt, prompt, model, credit
    - Add validation rules for required fields
    - Enable TypeScript type generation
+
+2. **Add Zod validation for required fields** (M1.4)
+   - Validate title, slug, alt, src, width, height, tags[]
+   - Add date validation for createdAt
+   - Optional fields: prompt, model, credit
+
+3. **Create example image content entry** (M1.4)
+   - Create sample .md file in /src/content/images/
+   - Test schema validation with sample data
+
+4. **Migrate sample images from /SOURCE IMAGES/** (M2.1)
+   - Select 10-20 representative images
+   - Move to /src/images/originals/
+   - Document naming conventions
+
+5. **Document image naming conventions** (M2.1)
+   - Create guidelines for image filenames
+   - Define slug generation rules
+   - Document metadata requirements

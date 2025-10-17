@@ -1,1 +1,88 @@
 @import "tailwindcss";
+
+/* ============================================================
+   AI Image Gallery - Custom Theme
+   Dark-neutral with warm metallic accents
+   ============================================================ */
+
+@theme {
+  /* ========== Color Palette ========== */
+  /* Base colors - dark-neutral foundation */
+  --color-bg: #15171e;        /* Charcoal - page background */
+  --color-panel: #232b3a;     /* Slate - cards, header, lightbox chrome */
+  --color-border: #2a2f3a;    /* Graphite - dividers, strokes */
+  --color-text: #e6eaf2;      /* Primary text - high contrast */
+  --color-muted: #aeb5b9;     /* Muted text - secondary copy */
+
+  /* Accent colors - warm metallics */
+  --color-gold: #f6a819;      /* Primary accent - CTAs, active filters, highlights */
+  --color-rust: #883f32;      /* Secondary accent - warnings, badges */
+  --color-steel: #dce7ec;     /* Tertiary - subtle icons, lines */
+  --color-teal: #323f44;      /* Alt accent - buttons, links on hover */
+
+  /* ========== Responsive Breakpoints ========== */
+  /* Gallery grid breakpoints optimized for image display */
+  --breakpoint-xs: 360px;     /* Mobile portrait - 1 column */
+  --breakpoint-sm: 540px;     /* Mobile landscape - 2 columns */
+  --breakpoint-md: 720px;     /* Tablet portrait - 2-3 columns */
+  --breakpoint-lg: 960px;     /* Tablet landscape - 3-4 columns */
+  --breakpoint-xl: 1200px;    /* Desktop - 4-5 columns */
+  --breakpoint-2xl: 2048px;   /* Large desktop - 5-6 columns */
+
+  /* ========== Typography ========== */
+  --font-family-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+}
+
+/* ========== Global Base Styles ========== */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family-sans);
+}
+
+/* ========== Custom Utilities ========== */
+
+/* Hover brightness for gold buttons */
+.hover-brightness-90:hover {
+  filter: brightness(0.9);
+}
+
+/* Backdrop blur for lightbox and overlays */
+.backdrop-blur-glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Skeleton loading animation */
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.skeleton-loading {
+  animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: linear-gradient(90deg, var(--color-panel) 0%, var(--color-border) 50%, var(--color-panel) 100%);
+  background-size: 200% 100%;
+}
+
+/* Focus states for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

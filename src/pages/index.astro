@@ -1,5 +1,5 @@
 ---
-
+import '../styles/global.css';
 ---
 
 <html lang="en">
@@ -8,9 +8,26 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>AI Image Gallery</title>
 	</head>
-	<body>
-		<h1>Astro</h1>
+	<body class="min-h-screen">
+		<div class="container mx-auto px-4 py-8">
+			<h1 class="text-4xl font-bold text-gold mb-4">AI Image Gallery</h1>
+			<p class="text-muted">Dark-neutral theme with warm metallic accents</p>
+
+			<!-- Theme test elements -->
+			<div class="mt-8 space-y-4">
+				<div class="bg-panel border border-border p-4 rounded">
+					<h2 class="text-2xl text-text mb-2">Panel Example</h2>
+					<p class="text-muted">This is a card with panel background and border</p>
+				</div>
+
+				<div class="flex gap-4">
+					<button class="bg-gold text-bg px-4 py-2 rounded hover-brightness-90">Primary Button</button>
+					<button class="bg-teal text-steel px-4 py-2 rounded hover:bg-gold">Secondary Button</button>
+					<span class="bg-rust/20 text-rust border border-rust/50 px-3 py-1 rounded-full text-sm">Badge</span>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
