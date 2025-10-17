@@ -10,11 +10,11 @@
 - [x] Initialize Git repository with .gitignore - Completed: 2025-10-16
 
 ### M1.2 - Astro Configuration
-- [ ] Configure astro.config.mjs for static output - Completed: ___________
-- [ ] Enable astro:assets integration - Completed: ___________
-- [ ] Set image optimization settings (formats, sizes) - Completed: ___________
-- [ ] Define allowed remote image domains - Completed: ___________
-- [ ] Configure build output directory - Completed: ___________
+- [x] Configure astro.config.mjs for static output - Completed: 2025-10-17
+- [x] Enable astro:assets integration - Completed: 2025-10-17
+- [x] Set image optimization settings (formats, sizes) - Completed: 2025-10-17
+- [x] Define allowed remote image domains - Completed: 2025-10-17
+- [x] Configure build output directory - Completed: 2025-10-17
 
 ### M1.3 - Tailwind Setup
 - [ ] Configure tailwind.config.js with custom theme - Completed: ___________
@@ -304,6 +304,10 @@
 
 ## Newly Discovered Tasks
 
+### Configuration
+- [ ] Create src/content.config.ts to replace auto-generated collections - Completed: ___________
+<!-- Reason: Build warning suggests defining collections explicitly per M1.4 requirements -->
+
 ### Performance
 - [ ] Investigate image preloading for LCP improvement - Completed: ___________
 - [ ] Benchmark build time with 100+ images - Completed: ___________
@@ -328,27 +332,21 @@
 
 ## Next 5 Tasks to Run
 
-Based on current progress (M1.1 - COMPLETE, 5/5 tasks), these are the immediate next tasks:
+Based on current progress (M1.1 - COMPLETE, M1.2 - COMPLETE), these are the immediate next tasks:
 
-1. **Configure astro.config.mjs for static output** (M1.2) ⭐ NEXT
-   - Set `output: 'static'`
-   - Enable `astro:assets` integration explicitly
-   - Configure image optimization settings (formats, widths)
-   - Define allowed remote image domains
-
-2. **Configure tailwind.config.js with custom theme** (M1.3)
+1. **Configure tailwind.config.js with custom theme** (M1.3) ⭐ NEXT
    - Note: Tailwind 4.x uses different config format (CSS-based)
    - Set up content paths for purging
    - Define responsive breakpoints for gallery grid
    - Configure custom theme colors if needed
 
-3. **Create global styles file** (M1.3)
+2. **Create global styles file** (M1.3)
    - Already exists at `/src/styles/global.css`
    - Add custom Tailwind utilities
    - Import Tailwind base/components/utilities
    - Add project-specific global styles
 
-4. **Define images collection schema in config.ts** (M1.4)
+3. **Define images collection schema in config.ts** (M1.4)
    - Create `/src/content/config.ts`
    - Define Zod schema with all fields from PRD:
      - title, slug, alt, src, width, height, tags[], createdAt, prompt, model, credit
