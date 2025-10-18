@@ -813,3 +813,68 @@ dist/
 3. **Lighthouse audit** - Performance testing on live deployment (target ≥90 score)
 4. **SEO enhancements** - Add meta tags, Open Graph, Twitter Cards (if needed)
 5. **Import remaining artists** - Process any additional SOURCE IMAGES folders
+
+---
+
+## Session Summary - 2025-10-18 (Part 6: Production Deployment & Troubleshooting)
+
+**Context:**
+Continued from Part 5 - User deployed to production but encountered CSS and logo display issues.
+
+**Issues Encountered & Resolved:**
+
+1. **CSS Not Loading**
+   - **Problem**: CSS file serving as HTML instead of CSS (content-type: text/html)
+   - **Root Cause**: `_astro/_slug_.B8DQ6luu.css` file was 2.2KB HTML instead of 25KB CSS
+   - **Resolution**: Re-uploaded `_astro` folder with correct CSS file
+   - **Verification**: CSS now loads correctly at 25KB
+
+2. **Gallery Pages Missing CSS**
+   - **Problem**: Landing page had CSS but gallery pages didn't
+   - **Root Cause**: Gallery HTML files referenced old CSS filename `_slug_.RsxQg9K1.css` instead of new `_slug_.B8DQ6luu.css`
+   - **Resolution**: Re-uploaded all `artist/` folder HTML files with current build
+   - **Files Updated**:
+     - `artist/32gamers/index.html`
+     - `artist/draachenmar/index.html`
+     - `artist/nice-and-satisfying/index.html`
+     - `artist/supers/index.html`
+
+3. **Logo Not Displaying**
+   - **Problem**: Logo image not showing on production
+   - **Initial Path Issue**: `/theGildedPixel/theGildedPixel-noBG.png` was correct but file wasn't uploaded
+   - **Root Cause**: Logo file on server was HTML (2.2KB) instead of PNG (452KB)
+   - **Resolution**: Re-uploaded `theGildedPixel-noBG.png` correctly
+
+4. **Browser Cache Issues**
+   - **Problem**: Hard refresh showing old CSS filename after Cloudflare purge
+   - **Cause**: Cloudflare edge cache + browser cache layers
+   - **Resolution**: Complete re-upload of all dist files + cache purge
+
+**Unnecessary File Created:**
+- `dist/.htaccess` - Created during troubleshooting but not needed (user's other subsites work without it)
+
+**Files Modified:**
+- [src/pages/index.astro](src/pages/index.astro#L62) - Logo path (no actual change needed, already correct)
+
+**Deployment Lessons Learned:**
+
+1. **Upload Verification Critical**: Always verify file sizes and content-types on server match local
+2. **Complete Folder Upload**: Must upload entire `dist/` contents, not selective files
+3. **Cache Clearing Layers**: Cloudflare + browser cache require full purge and hard refresh
+4. **File Integrity**: Server can corrupt uploads (CSS/PNG becoming HTML) - always verify after upload
+
+**Production Status:**
+✅ **Live Site**: https://32gamers.com/theGildedPixel/
+✅ **CSS Working**: All pages styled correctly
+✅ **Logo Displaying**: 500x500 PNG showing on landing page
+✅ **Gallery Pages**: All 4 artist galleries functional
+✅ **Images Loading**: 1001 WebP images accessible
+✅ **Lightbox Working**: Image detail view functional
+
+**Next Session Priorities:**
+
+1. **Lighthouse audit** - Run performance testing on live site (target ≥90 score)
+2. **SEO optimization** - Add meta tags, Open Graph, Twitter Cards
+3. **Accessibility audit** - Keyboard navigation, screen reader testing
+4. **Import remaining artists** - Process any additional SOURCE IMAGES folders
+5. **Remove unnecessary .htaccess** - Clean up file created during troubleshooting
