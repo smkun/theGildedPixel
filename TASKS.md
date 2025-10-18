@@ -21,6 +21,9 @@ The simplified gallery is **functionally complete** with landing page, artist ga
 - [x] Automated frontmatter generation - 2025-10-17
 - [x] Image naming conventions documentation - 2025-10-17
 - [x] ~900+ images imported (3 artists) - 2025-10-18
+- [x] Enhanced script with auto format detection - 2025-10-18
+- [x] Added WebP file support to import script - 2025-10-18
+- [x] Fixed misnamed file handling (PNG with .jpg extension) - 2025-10-18
 
 ### Pages & UI
 - [x] Landing page with artist grid - 2025-10-17
@@ -146,6 +149,10 @@ npm run preview      # Preview production build
 
 ### Scripts
 - `scripts/import-artist-images.js` - Main import automation
+  - ✨ Auto-detects file format (JPG, PNG, WebP)
+  - ✨ Handles misnamed files (PNG with .jpg extension)
+  - ✨ Copies existing WebP files (no conversion needed)
+  - ✨ Supports VP8, VP8L, VP8X WebP formats
 - `scripts/get-image-dims.js` - Manual dimension extraction
 - ~~`scripts/convert-and-import.js`~~ - Obsolete (use import-artist-images.js)
 - ~~`scripts/add-artist-field.js`~~ - Obsolete (one-time migration)

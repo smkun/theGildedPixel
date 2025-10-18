@@ -451,3 +451,93 @@ Optional markdown content for extended description.
 1. **Performance testing** - Run Lighthouse audit and optimize for ≥90 score
 2. **SEO meta tags** - Add comprehensive meta, Open Graph, Twitter Cards
 3. **Deployment setup** - Choose hosting (Netlify/Vercel) and configure pipeline
+
+---
+
+## Session Summary - 2025-10-18 (Part 2: Script Enhancement)
+
+**Tasks Completed:**
+- [x] Enhanced import script with automatic format detection
+- [x] Added WebP file support to import script
+- [x] Fixed Draachenmar folder processing issues
+- [x] Processed 2 problematic images successfully
+
+**Script Enhancements Made:**
+1. **Automatic Format Detection** ([import-artist-images.js:54-70](scripts/import-artist-images.js#L54-L70))
+   - Added `detectImageFormat()` function using file signatures (magic bytes)
+   - PNG detection: `0x89 0x50 0x4E 0x47`
+   - JPEG detection: `0xFF 0xD8`
+   - WebP detection: `RIFF ... WEBP` signature
+   - No longer relies on file extension for format detection
+
+2. **WebP Dimension Reader** ([import-artist-images.js:72-103](scripts/import-artist-images.js#L72-L103))
+   - Added `getWebPDimensions()` function
+   - Supports VP8 (lossy), VP8L (lossless), VP8X (extended) formats
+   - Extracts width/height from WebP binary structure
+
+3. **WebP File Handling** ([import-artist-images.js:258-272](scripts/import-artist-images.js#L258-L272))
+   - Files already in WebP format are copied (not converted)
+   - Creates markdown files for existing WebP images
+   - Moves WebP files to appropriate destination folders
+
+4. **Smart Processing Logic**
+   - Auto-detects actual format vs. file extension
+   - Handles misnamed files (PNG with .jpg extension)
+   - Process flow: Detect format → Get dimensions → Copy or Convert → Create .md → Delete source
+
+**Issues Fixed:**
+
+1. **Bramblefoot Bumblehatch.jpg**
+   - **Problem**: PNG file with .jpg extension causing "Not a JPEG file" error
+   - **Root cause**: Script relied on file extension, JPEG parser failed on PNG data
+   - **Solution**: Auto-detect format from binary signature
+   - **Result**: ✅ Successfully detected as PNG, converted to WebP (1024x1024)
+   - **Files created**:
+     - `src/images/draachenmar/bramblefoot-bumblehatch.webp`
+     - `src/content/images/bramblefoot-bumblehatch.md`
+
+2. **Lineton Orphanage.webp**
+   - **Problem**: Already WebP but script only handled JPG/PNG
+   - **Root cause**: Script filter regex excluded .webp files
+   - **Solution**: Added WebP to file filter and copy logic
+   - **Result**: ✅ Successfully copied WebP and created metadata (1792x1024)
+   - **Files created**:
+     - `src/images/draachenmar/lineton-orphanage.webp` (copied)
+     - `src/content/images/lineton-orphanage.md`
+
+**Processing Summary:**
+```
+📁 Draachenmar folder:
+   - Converted: 1 (PNG→WebP)
+   - Copied: 1 (WebP→WebP)
+   - Failed: 0
+   - Total images added to gallery: 2
+```
+
+**Technical Improvements:**
+- **Robustness**: Handles misnamed files gracefully
+- **Flexibility**: Supports JPG, PNG, and WebP source files
+- **Reliability**: Format detection based on binary signatures, not extensions
+- **Efficiency**: Skips conversion for already-converted WebP files
+
+**Files Modified:**
+- [scripts/import-artist-images.js](scripts/import-artist-images.js)
+  - Added `copyFile` import
+  - Added `detectImageFormat()` function
+  - Added `getWebPDimensions()` function
+  - Enhanced `getImageDimensions()` with format detection
+  - Updated file filter to include `.webp` files
+  - Updated processing loop to copy WebP files instead of converting
+
+**New Script Capabilities:**
+- ✅ Auto-detect file format (independent of extension)
+- ✅ Handle PNG files with .jpg extension
+- ✅ Handle JPEG files with .png extension
+- ✅ Process existing WebP files
+- ✅ Extract dimensions from WebP (VP8/VP8L/VP8X)
+- ✅ Smart copy vs. convert decision
+
+**Next Session Priorities:**
+1. **Import remaining artists** - Process all SOURCE IMAGES subfolders
+2. **Performance testing** - Run Lighthouse audit and optimize for ≥90 score
+3. **SEO meta tags** - Add comprehensive meta, Open Graph, Twitter Cards
