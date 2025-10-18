@@ -1,5 +1,6 @@
 ---
-src: "/src/images/originals/aeromancer.webp"
+artist: "nice-and-satisfying"
+src: "/src/images/nice-and-satisfying/aeromancer.webp"
 width: 1158
 height: 2048
 ---

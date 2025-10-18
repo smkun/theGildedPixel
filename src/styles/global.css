@@ -14,11 +14,13 @@
   --color-text: #e6eaf2;      /* Primary text - high contrast */
   --color-muted: #aeb5b9;     /* Muted text - secondary copy */
 
-  /* Accent colors - warm metallics */
-  --color-gold: #f6a819;      /* Primary accent - CTAs, active filters, highlights */
-  --color-rust: #883f32;      /* Secondary accent - warnings, badges */
-  --color-steel: #dce7ec;     /* Tertiary - subtle icons, lines */
-  --color-teal: #323f44;      /* Alt accent - buttons, links on hover */
+  /* Accent colors - warm metallics with enhanced palette */
+  --color-gold: #d4af37;      /* Rich gold - Primary accent, CTAs, highlights */
+  --color-gold-bright: #f6c547; /* Brighter gold - Hover states */
+  --color-gold-dim: #b8992f;  /* Dimmed gold - Borders, subtle accents */
+  --color-rust: #c17854;      /* Warm copper - Secondary accent */
+  --color-steel: #b8c5d0;     /* Cool steel - Tertiary accents */
+  --color-teal: #4a6572;      /* Muted teal - Links, subtle highlights */
 
   /* ========== Responsive Breakpoints ========== */
   /* Gallery grid breakpoints optimized for image display */
@@ -31,7 +33,8 @@
   --breakpoint-ultra: 1800px; /* Ultra-wide - 9 columns */
 
   /* ========== Typography ========== */
-  --font-family-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-display: "Playfair Display", Georgia, serif;
+  --font-family-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-family-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
 }
 
@@ -40,6 +43,133 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-family-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  padding-left: 0;
+  padding-right: 0;
+  transition: padding 0.3s ease;
+}
+
+/* Add horizontal padding when filigree borders are visible */
+@media (min-width: 1280px) {
+  body {
+    padding-left: 100px;  /* ~1 inch space for filigree + breathing room */
+    padding-right: 100px;
+  }
+}
+
+/* Gilded filigree borders on left and right - hidden on mobile */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 80px; /* Adjust based on your filigree image width */
+  background-image: url('/src/components/filagre.png');
+  background-repeat: repeat-y;
+  background-size: contain;
+  background-position: center;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.8;
+  display: none; /* Hidden by default on mobile */
+}
+
+/* Show filigree borders on desktop and larger only (not on tablets) */
+@media (min-width: 1280px) {
+  body::before,
+  body::after {
+    display: block;
+  }
+}
+
+body::before {
+  left: 0;
+}
+
+body::after {
+  right: 0;
+  transform: scaleX(-1); /* Mirror the filigree on the right side */
+}
+
+/* Decorative corner ornaments */
+.gilded-frame {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Top-left ornament */
+.gilded-frame.top-left {
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(
+    circle at top left,
+    var(--color-gold) 0%,
+    var(--color-gold-dim) 40%,
+    transparent 70%
+  );
+  opacity: 0.15;
+}
+
+/* Top-right ornament */
+.gilded-frame.top-right {
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(
+    circle at top right,
+    var(--color-gold) 0%,
+    var(--color-gold-dim) 40%,
+    transparent 70%
+  );
+  opacity: 0.15;
+}
+
+/* Bottom-left ornament */
+.gilded-frame.bottom-left {
+  bottom: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(
+    circle at bottom left,
+    var(--color-gold) 0%,
+    var(--color-gold-dim) 40%,
+    transparent 70%
+  );
+  opacity: 0.15;
+}
+
+/* Bottom-right ornament */
+.gilded-frame.bottom-right {
+  bottom: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(
+    circle at bottom right,
+    var(--color-gold) 0%,
+    var(--color-gold-dim) 40%,
+    transparent 70%
+  );
+  opacity: 0.15;
+}
+
+/* Smooth scrolling for in-page navigation */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 /* ========== Custom Utilities ========== */
@@ -172,14 +302,42 @@ body {
 .gallery-card {
   position: relative;
   overflow: hidden;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   background-color: var(--color-panel);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s ease;
+  border: 1px solid transparent;
 }
 
 .gallery-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4),
+              0 0 0 1px var(--color-gold-dim);
+  border-color: var(--color-gold-dim);
+}
+
+/* Shimmer effect on hover */
+.gallery-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gallery-card:hover::before {
+  left: 100%;
 }
 
 /* Aspect ratio containers */
@@ -234,15 +392,31 @@ body {
 
 .lightbox-overlay {
   position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.95);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.97) 100%
+  );
+  backdrop-filter: blur(8px);
   z-index: 50;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  padding-bottom: 7rem; /* Extra padding on bottom for controls on mobile */
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Desktop: less bottom padding */
+@media (min-width: 769px) {
+  .lightbox-overlay {
+    padding-bottom: 1rem;
+  }
 }
 
 .lightbox-overlay.active {
@@ -252,35 +426,64 @@ body {
 .lightbox-content {
   position: relative;
   max-width: 90vw;
-  max-height: 90vh;
+  max-height: 80vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
 }
 
 .lightbox-image {
-  max-width: 100%;
-  max-height: 90vh;
+  max-width: 90vw;
+  max-height: 80vh;
   width: auto;
   height: auto;
   object-fit: contain;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+              0 0 0 1px rgba(212, 175, 55, 0.15);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lightbox-overlay.active .lightbox-image {
+  animation: zoomIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .lightbox-button {
   position: absolute;
-  background-color: rgba(35, 43, 58, 0.9);
+  background-color: rgba(35, 43, 58, 0.85);
+  backdrop-filter: blur(8px);
   color: var(--color-text);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   padding: 1rem;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: background-color 0.2s ease, opacity 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 51;
+  font-weight: 500;
 }
 
 .lightbox-button:hover {
-  background-color: var(--color-panel);
+  background-color: rgba(212, 175, 55, 0.15);
+  border-color: var(--color-gold);
+  color: var(--color-gold-bright);
+  transform: scale(1.05);
+}
+
+.lightbox-button:active {
+  transform: scale(0.98);
 }
 
 .lightbox-close {
@@ -292,41 +495,244 @@ body {
   min-height: 44px;
 }
 
-/* Navigation arrows - hidden by default, show on overlay hover */
+/* Navigation arrows - positioned on sides of viewport */
 .lightbox-prev,
 .lightbox-next {
+  position: fixed !important; /* Override .lightbox-button position: absolute */
   top: 50%;
   transform: translateY(-50%);
   font-size: 2rem;
   line-height: 1;
   min-width: 44px;
   min-height: 44px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  opacity: 0.7;
+  transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+  z-index: 150; /* Above filigree borders (z-index: 100) */
 }
 
-.lightbox-overlay:hover .lightbox-prev,
-.lightbox-overlay:hover .lightbox-next {
+/* Only show arrows on individual button hover, not whole lightbox */
+.lightbox-prev:hover,
+.lightbox-next:hover {
   opacity: 1;
+  transform: translateY(-50%) scale(1.1);
 }
 
 .lightbox-prev {
-  left: 1rem;
+  left: 6rem; /* Clear filigree (80px) + some spacing */
 }
 
 .lightbox-next {
-  right: 1rem;
+  right: 6rem; /* Clear filigree (80px) + some spacing */
+}
+
+/* On large screens with filigree visible, move arrows further in */
+@media (min-width: 1280px) {
+  .lightbox-prev {
+    left: 8rem; /* 100px body padding + 80px filigree + spacing */
+  }
+
+  .lightbox-next {
+    right: 8rem;
+  }
+}
+
+/* On smaller screens, position arrows below the image */
+@media (max-width: 768px) {
+  .lightbox-prev,
+  .lightbox-next {
+    position: fixed;
+    top: auto;
+    bottom: 5rem; /* Position above the counter */
+    transform: translateY(0);
+    opacity: 0.9; /* More visible on mobile */
+  }
+
+  .lightbox-prev:hover,
+  .lightbox-next:hover {
+    transform: scale(1.1);
+  }
+
+  .lightbox-prev {
+    left: 1rem;
+  }
+
+  .lightbox-next {
+    right: 1rem;
+  }
+
+  /* Counter positioning on mobile */
+  .lightbox-counter {
+    bottom: 1.5rem;
+  }
 }
 
 .lightbox-counter {
-  position: absolute;
+  position: fixed;
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(35, 43, 58, 0.9);
-  color: var(--color-muted);
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  background-color: rgba(35, 43, 58, 0.85);
+  backdrop-filter: blur(8px);
+  color: var(--color-steel);
+  padding: 0.625rem 1.25rem;
+  border-radius: 2rem;
   font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   z-index: 51;
+}
+
+/* ========== Enhanced Typography ========== */
+
+/* All headings use display font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Heading with gold accent */
+.heading-gold {
+  font-family: var(--font-family-display);
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-bright) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Subtitle with refined styling */
+.subtitle-elegant {
+  font-family: var(--font-family-display);
+  color: var(--color-steel);
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  font-style: italic;
+}
+
+/* ========== Link Enhancements ========== */
+
+a {
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-gold-bright);
+}
+
+/* Fancy link underline effect */
+.link-fancy {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-fancy::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-bright));
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.link-fancy:hover::after {
+  width: 100%;
+}
+
+/* ========== Button Styles ========== */
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-bright) 100%);
+  color: var(--color-bg);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* ========== Content Container Enhancements ========== */
+
+/* Max width container with elegant padding */
+.container-elegant {
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (max-width: 768px) {
+  .container-elegant {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* ========== Fade-in Animation ========== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Stagger children animations */
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+
+/* ========== Decorative Elements ========== */
+
+/* Gold divider line */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-gold-dim) 50%,
+    transparent 100%
+  );
+  margin: 2rem 0;
+}
+
+/* Subtle background pattern */
+.bg-pattern {
+  background-image:
+    linear-gradient(rgba(212, 175, 55, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212, 175, 55, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
 }

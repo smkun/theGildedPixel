@@ -1,10 +1,32 @@
 import { defineCollection, z } from 'astro:content';
 
 /**
+ * Artists Collection Schema
+ *
+ * Metadata for each artist in the gallery.
+ */
+const artists = defineCollection({
+  type: 'content',
+  schema: z.object({
+    // Artist display name
+    name: z.string()
+      .min(1, 'Artist name is required'),
+
+    // Optional artist profile URL (Facebook, Instagram, etc.)
+    profileUrl: z.string()
+      .url('Profile URL must be a valid URL')
+      .optional(),
+
+    // Optional artist bio/description
+    bio: z.string()
+      .optional(),
+  }),
+});
+
+/**
  * Images Collection Schema
  *
- * Minimal schema for image gallery - just paths and dimensions.
- * No labels, tags, or text content needed.
+ * Minimal schema for image gallery - paths, dimensions, and artist attribution.
  */
 const images = defineCollection({
   type: 'content',
@@ -21,6 +43,10 @@ const images = defineCollection({
     height: z.number()
       .positive('Height must be a positive number')
       .int('Height must be an integer'),
+
+    // Artist slug (references artists collection)
+    artist: z.string()
+      .min(1, 'Artist is required'),
   }),
 });
 
@@ -28,5 +54,6 @@ const images = defineCollection({
  * Export collections configuration
  */
 export const collections = {
+  artists,
   images,
 };

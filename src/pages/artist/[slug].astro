@@ -1,0 +1,205 @@
+---
+import '../../styles/global.css';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+// Generate static paths for all artists
+export async function getStaticPaths() {
+  const artists = await getCollection('artists');
+  return artists.map((artist) => ({
+    params: { slug: artist.id.replace(/\.md$/, '') },
+    props: { artist },
+  }));
+}
+
+const { artist } = Astro.props;
+
+// Fetch all images for this artist
+const allImages = await getCollection('images');
+const artistSlug = artist.id.replace(/\.md$/, '');
+const artistImages = allImages.filter(img => img.data.artist === artistSlug);
+
+// Prepare image data for lightbox (client-side)
+const imageData = artistImages.map(img => ({
+  src: img.data.src,
+  width: img.data.width,
+  height: img.data.height
+}));
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{artist.data.name} - The Gilded Pixel</title>
+
+		<!-- Google Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+	</head>
+	<body class="min-h-screen bg-pattern">
+		<!-- Decorative corner ornaments -->
+		<div class="gilded-frame top-left"></div>
+		<div class="gilded-frame top-right"></div>
+		<div class="gilded-frame bottom-left"></div>
+		<div class="gilded-frame bottom-right"></div>
+
+		<div class="container-elegant py-12">
+			<!-- Back link with enhanced styling -->
+			<a href="/" class="link-fancy text-steel hover:text-gold-bright inline-flex items-center gap-2 mb-8 text-sm font-medium uppercase tracking-wide">
+				<span>←</span>
+				<span>Back to Artists</span>
+			</a>
+
+			<!-- Artist header with gradient -->
+			<div class="mb-12 fade-in-up">
+				<h1 class="text-5xl md:text-6xl heading-gold mb-4">{artist.data.name}</h1>
+
+				<!-- Artist info with elegant layout -->
+				<div class="flex flex-col sm:flex-row sm:items-center gap-4 text-muted">
+					<p class="text-sm uppercase tracking-wide">
+						{artistImages.length} {artistImages.length === 1 ? 'image' : 'images'}
+					</p>
+					{artist.data.profileUrl && (
+						<>
+							<span class="hidden sm:inline text-border">•</span>
+							<a
+								href={artist.data.profileUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="link-fancy text-gold hover:text-gold-bright text-sm font-medium inline-flex items-center gap-2"
+							>
+								<span>Visit Profile</span>
+								<span>→</span>
+							</a>
+						</>
+					)}
+				</div>
+			</div>
+
+			<div class="divider-gold mb-12"></div>
+
+			<!-- Gallery Grid with enhanced spacing -->
+			<div class="gallery-grid gallery-grid-lg" id="gallery-grid">
+				{artistImages.map((image, index) => (
+					<div
+						class="gallery-card aspect-portrait group cursor-pointer"
+						data-index={index}
+					>
+						<div class="image-wrapper overflow-hidden rounded-lg h-full relative">
+							<Image
+								src={image.data.src}
+								alt={`Image ${index + 1} by ${artist.data.name}`}
+								width={image.data.width}
+								height={image.data.height}
+								class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+								loading="lazy"
+							/>
+							<!-- Subtle overlay on hover -->
+							<div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+
+		<!-- Lightbox Script -->
+		<script type="module" define:vars={{ imageData }}>
+			// Lightbox class
+			class Lightbox {
+				constructor(images) {
+					this.images = images;
+					this.currentIndex = 0;
+					this.overlay = this.createOverlay();
+					this.imageElement = this.overlay.querySelector('.lightbox-image');
+					this.counterElement = this.overlay.querySelector('.lightbox-counter');
+					this.attachEventListeners();
+				}
+
+				createOverlay() {
+					const overlay = document.createElement('div');
+					overlay.className = 'lightbox-overlay';
+					overlay.style.display = 'none';
+					overlay.innerHTML = `
+						<div class="lightbox-content">
+							<img class="lightbox-image" alt="" />
+							<button class="lightbox-button lightbox-close" aria-label="Close">×</button>
+							<button class="lightbox-button lightbox-prev" aria-label="Previous">‹</button>
+							<button class="lightbox-button lightbox-next" aria-label="Next">›</button>
+							<div class="lightbox-counter"></div>
+						</div>
+					`;
+					document.body.appendChild(overlay);
+					return overlay;
+				}
+
+				attachEventListeners() {
+					this.overlay.querySelector('.lightbox-close').addEventListener('click', () => this.close());
+					this.overlay.querySelector('.lightbox-prev').addEventListener('click', () => this.prev());
+					this.overlay.querySelector('.lightbox-next').addEventListener('click', () => this.next());
+
+					// Removed click-to-close on background - only X button and Escape key close now
+
+					document.addEventListener('keydown', (e) => {
+						if (this.overlay.style.display === 'flex') {
+							if (e.key === 'Escape') this.close();
+							else if (e.key === 'ArrowLeft') this.prev();
+							else if (e.key === 'ArrowRight') this.next();
+						}
+					});
+				}
+
+				open(index) {
+					this.currentIndex = index;
+					this.overlay.style.display = 'flex';
+					setTimeout(() => this.overlay.classList.add('active'), 10);
+					this.updateImage();
+					document.body.style.overflow = 'hidden';
+				}
+
+				close() {
+					this.overlay.classList.remove('active');
+					setTimeout(() => {
+						this.overlay.style.display = 'none';
+						document.body.style.overflow = '';
+					}, 300);
+				}
+
+				prev() {
+					this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+					this.updateImage();
+				}
+
+				next() {
+					this.currentIndex = (this.currentIndex + 1) % this.images.length;
+					this.updateImage();
+				}
+
+				updateImage() {
+					const image = this.images[this.currentIndex];
+					this.imageElement.src = image.src;
+					this.imageElement.width = image.width;
+					this.imageElement.height = image.height;
+					this.counterElement.textContent = `${this.currentIndex + 1} / ${this.images.length}`;
+				}
+			}
+
+			// Initialize when DOM is ready
+			document.addEventListener('DOMContentLoaded', () => {
+				const lightbox = new Lightbox(imageData);
+				const galleryGrid = document.getElementById('gallery-grid');
+
+				galleryGrid.addEventListener('click', (e) => {
+					const card = e.target.closest('[data-index]');
+					if (card) {
+						const index = parseInt(card.getAttribute('data-index'));
+						lightbox.open(index);
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

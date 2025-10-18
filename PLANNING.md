@@ -2,236 +2,161 @@
 
 ## Vision
 
-A blazingly fast, static AI image gallery built with Astro and Tailwind CSS that showcases AI-generated artwork through an optimized, responsive grid with client-side filtering, search, and lightbox viewing. The site delivers WebP images with lazy-loading to achieve sub-2.5s LCP on mobile while maintaining Lighthouse Performance scores ≥90. Content is managed through simple Markdown/JSON files with no backend, enabling quick publishing updates and straightforward static hosting.
+**"The Gilded Pixel - Where prompts meet polish."**
+
+A fast, elegant static gallery showcasing AI-generated character art by multiple artists. Built with Astro and Tailwind CSS, the site features a simple two-level navigation: an artist selection landing page and per-artist galleries with integrated lightbox viewing. Images are optimized as WebP format, managed through minimal Markdown frontmatter, and deployed as static files with zero backend complexity.
 
 ## Tech Stack
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **Astro** | ^4.0.0 | Static site generator with islands architecture |
-| **Tailwind CSS** | ^3.4.0 | Utility-first CSS framework |
-| **TypeScript** | ^5.3.0 | Type-safe component and island development |
+| **Astro** | 5.14.5 | Static site generator with Content Collections |
+| **Tailwind CSS** | 4.1.14 | Utility-first CSS framework via Vite plugin |
+| **TypeScript** | 5.6.3 | Type-safe development (strict mode) |
 | **astro:assets** | (built-in) | Image optimization with `<Image />` component |
-| **Sharp** | (via Astro) | Image processing for WebP conversion and responsive derivatives |
+| **Sharp** | (via Astro) | Image processing for WebP and responsive derivatives |
 
-**Rationale**: Astro provides zero-JS-by-default SSG perfect for static galleries, while Tailwind enables rapid responsive design. The built-in `astro:assets` integration handles image optimization at build time, eliminating need for external image CDNs.
+**Rationale**: Astro's Content Collections provide type-safe content management with zero runtime overhead. Tailwind's utility classes enable rapid styling with a custom dark theme. Images are converted to WebP via build scripts and optimized by Astro at build time.
 
-## Components and Boundaries
+## Architecture (Simplified)
 
 ### Content Layer (Astro Content Collections)
-**Location**: `/src/content/images/*.md`, `/src/content/collections/*.md`
+**Location**: `/src/content/`
 
-- **Images Collection**: Frontmatter schema with `title`, `slug`, `alt`, `src`, `width`, `height`, `tags[]`, `createdAt`, `prompt`, `model`, `credit`
-- **Collections**: Optional curated sets with `title`, `slug`, `description`, `coverImage`, `tags[]`
-- **Boundary**: Content is declarative configuration; no business logic
+**Images Collection** (`/src/content/images/*.md`):
+- Minimal schema: `artist` (string), `src` (string), `width` (number), `height` (number)
+- Example:
+  ```markdown
+  ---
+  artist: "nice-and-satisfying"
+  src: "/src/images/nice-and-satisfying/image.webp"
+  width: 1158
+  height: 2048
+  ---
+  ```
 
-### Static Components (Astro)
-**Location**: `/src/components/*.astro`
+**Artists Collection** (`/src/content/artists/*.md`):
+- Schema: `name` (string), `profileUrl` (optional string), `bio` (optional string)
+- Auto-created by `scripts/import-artist-images.js`
 
-- **`GalleryGrid.astro`**: Server-rendered grid layout with masonry CSS, accepts `items[]`, `selectedTags[]`, `query` props
-- **`ImageCard.astro`**: Individual card with aspect ratio container, hover states, lazy-loading via `<Image />`
-- **`Layout.astro`**: Base layout with SEO meta, Open Graph, JSON-LD structured data
-- **Boundary**: Zero client JS; pure HTML/CSS rendering
-
-### Interactive Islands (TypeScript)
-**Location**: `/src/components/*.ts` with `client:load` or `client:idle` directives
-
-- **`TagFilter.ts`**: Multi-select tag UI, updates URL params, filters grid client-side
-- **`SearchBox.ts`**: Text input with debounce, filters by title/prompt/alt
-- **`Lightbox.ts`**: Modal with keyboard nav (←/→/Esc), swipe gestures, zoom, caption display
-- **Boundary**: Minimal client JS (<90KB gzip); hydrates only interactive features
+**Boundary**: Pure data, no logic. Content files created by import scripts.
 
 ### Pages (Astro Routes)
-**Location**: `/src/pages/*.astro`
+**Location**: `/src/pages/`
 
-- **`/index.astro`**: Landing with featured grid, tag cloud, search box
-- **`/gallery.astro`**: Full gallery with pagination/infinite scroll
-- **`/image/[slug].astro`**: Dynamic route for image detail with next/prev navigation
-- **`/tags/[tag].astro`**: Tag-filtered views with SEO
-- **`/collections/[slug].astro`**: Curated collection pages
-- **`/about.astro`**: Static bio page
-- **Boundary**: All routes pre-rendered at build; no SSR endpoints
+**Landing Page** (`/index.astro`):
+- Displays artist grid with preview images
+- Shows artist names and image counts
+- Links to individual artist galleries
+
+**Artist Gallery** (`/artist/[slug].astro`):
+- Dynamic route for each artist
+- Responsive grid of all artist's images
+- Inline lightbox script (no separate islands)
+- Keyboard navigation (←/→/Esc)
+
+**Boundary**: All routes pre-rendered at build time. No SSR. Minimal client-side JS (lightbox only).
 
 ## External Services and Data Flow
 
-### Image Storage
-**Source**: `/src/images/originals/*.jpg` (local, preferred) or remote URLs with allowed domains
+### Image Storage and Processing
 
-**Note**: Project includes 440 source images in `/SOURCE IMAGES/` directory (character art) that will be migrated to `/src/images/originals/` during M2.1 implementation.
+**Source**: `/SOURCE IMAGES/[artist-name]/` - organized by artist subdirectories
 
-**Flow**:
+**Processing**: `scripts/import-artist-images.js`
+- Reads all subdirectories in `/SOURCE IMAGES/`
+- Converts JPG/PNG → WebP using ffmpeg (fallback: cwebp)
+- Auto-creates artist profiles in `/src/content/artists/`
+- Generates `.md` files in `/src/content/images/` with minimal frontmatter
+- Deletes source files after successful conversion
+- Organizes WebP files in `/src/images/[artist-slug]/`
+
+**Build-time Flow**:
 ```
-Source Images → astro:assets <Image /> → Build-time Processing (Sharp)
-  ├─ Generate responsive srcset: [360, 540, 720, 960, 1200, 2048]px widths
-  ├─ Convert to WebP with JPG fallback
-  └─ Output to /dist/_astro/*.webp, *.jpg
+SOURCE IMAGES/
+  ├─ artist-name/
+  │   └─ image.jpg
+  └─ another-artist/
+      └─ image.png
+
+        ↓ [import-artist-images.js]
+
+/src/images/artist-slug/image.webp
+/src/content/images/image.md
+/src/content/artists/artist-slug.md
+
+        ↓ [Astro build]
+
+/dist/_astro/[hash].webp (optimized, responsive)
 ```
-
-**Remote Images**: Allowed via `<Image />` with explicit `width`/`height` for CLS prevention; no build-time optimization (consider local mirroring for high-traffic images)
-
-### Analytics (Optional)
-**Service**: Plausible or Umami (privacy-friendly, cookieless)
-
-**Flow**: Static embed script → client-side pageview tracking → external dashboard (no server-side integration)
 
 ### Hosting
-**Target**: Static file hosts (Netlify, Vercel, Cloudflare Pages, GitHub Pages)
+**Target**: Static file hosts (Netlify, Vercel, Cloudflare Pages)
 
 **Flow**: `npm run build` → `/dist` static assets → CDN deployment
 
-## Key Decisions
+**Note**: No analytics, no backend, no external services. Pure static site.
 
-### Decision 1: Image Optimization Strategy
-**Choice**: Use Astro's built-in `astro:assets` with `<Image />` component (Option A from [PRD.md](PRD.md):89-92)
+## Key Implementation Decisions
 
-**Rationale**: Build-time optimization eliminates runtime overhead, automatically handles WebP conversion + fallbacks, and provides responsive `srcset` without external tooling. Pre-build scripts (Option B) would require manual maintenance and separate conversion pipeline.
+### Simplified Schema (No Tags, No Metadata)
+**Choice**: Minimal frontmatter with just `artist`, `src`, `width`, `height`
 
-### Decision 2: Content Management
-**Choice**: Astro Content Collections with Markdown frontmatter for images
+**Rationale**: Eliminated complexity of tags, search, filtering, prompts, and metadata. Focus on pure visual gallery experience. Content creation is fully automated via import script.
 
-**Rationale**: Type-safe schema validation, no CMS complexity, Git-based workflow for version control, and trivial content updates by editing `.md` files. Aligns with [PRD.md](PRD.md):36-47 content model and [PRD.md](PRD.md):13 goal of "Easy content updates through Markdown/JSON."
+### Two-Page Architecture
+**Choice**: Landing page (artist grid) + Artist galleries (with lightbox)
 
-### Decision 3: Client-Side Filtering
-**Choice**: Island-based TypeScript components (`TagFilter.ts`, `SearchBox.ts`) with URL param persistence
+**Rationale**: Simple navigation hierarchy. No individual image pages, no tag pages, no collections. Just browse by artist and view in lightbox.
 
-**Rationale**: Maintains static build benefits while enabling rich interactivity. URL params allow shareable filtered views. Fits within <90KB JS budget ([PRD.md](PRD.md):24) since only filter/search/lightbox islands hydrate.
+### Inline Lightbox Script
+**Choice**: Vanilla JavaScript in `<script>` tag, not separate island component
 
-### Decision 4: Masonry Layout
-**Choice**: Pure CSS grid with `grid-template-columns` and auto-flow, no JS masonry library
+**Rationale**: Minimal JS footprint. Keyboard navigation (←/→/Esc) built-in. No external libraries, no framework overhead.
 
-**Rationale**: Eliminates JS dependencies, reduces bundle size, and leverages native browser optimizations. Achieves [PRD.md](PRD.md):64 "fluid columns, gap-based masonry (CSS only)" requirement while supporting responsive breakpoints via Tailwind.
+### Automated Content Pipeline
+**Choice**: Single script (`import-artist-images.js`) handles everything
 
-### Decision 5: Accessibility Compliance
-**Choice**: WCAG AA compliance with keyboard nav, focus states, `prefers-reduced-motion` support
+**Rationale**: Drop images in artist folders, run script, content is ready. Auto-creates artist profiles, converts to WebP, generates frontmatter, deletes sources.
 
-**Rationale**: [PRD.md](PRD.md):112-117 explicitly requires keyboard-accessible lightbox, ARIA labels, and motion preferences. TypeScript islands enforce focus management programmatically.
+### Dark Theme with Gold Accents
+**Choice**: Custom Tailwind theme with dark background and gold highlights
 
-## Open Questions and Risks
+**Rationale**: "The Gilded Pixel" branding. Elegant, gallery-focused aesthetic. Gold (#d4af37) provides warmth against dark backgrounds.
 
-### Q1: Local vs Remote Image Hosting Strategy
-**Question**: Should we commit large source images to Git or use Git LFS / external storage?
+## Current Status (as of 2025-10-18)
 
-**Risk**: Large binary files bloat repository; Git LFS adds complexity; remote images bypass build optimization.
+### ✅ Completed
+- Project scaffolding with Astro 5.14.5 + Tailwind 4.1.14
+- Content Collections schema (artists + images)
+- Image import automation script
+- Landing page with artist grid
+- Artist gallery pages with responsive grid
+- Lightbox with keyboard navigation
+- Dark theme with gold accents
+- Responsive breakpoints (1-9 column grid)
+- ~900+ images imported from 3 artists
 
-**Next Steps**:
-- Estimate total image collection size (if <500MB, commit directly; if >500MB, evaluate Git LFS)
-- Define allowed remote domains in `astro.config.mjs` `image.domains` for external sources
-- Test build times with 50+ images to validate optimization performance
+### 🔄 In Progress
+- CSS enhancements for improved visual appeal
+- Additional artist imports
 
-### Q2: Infinite Scroll vs Pagination
-**Question**: [PRD.md](PRD.md):56 mentions "pagination/infinite load" but doesn't specify preference for `/gallery`
+### 📋 Future Considerations
+- Performance testing (Lighthouse CI)
+- Deployment to static host
+- SEO optimization (meta tags, Open Graph)
+- Analytics integration (optional)
 
-**Risk**: Infinite scroll adds JS complexity and can hurt SEO/accessibility; pagination is simpler but less engaging.
+## Workflow for Adding New Artists
 
-**Next Steps**:
-- Start with pagination (simpler, better a11y) in MVP
-- Add infinite scroll as progressive enhancement if user feedback demands it
-- Implement with Intersection Observer API to stay within JS budget
+1. **Organize source images**: Create folder in `/SOURCE IMAGES/[Artist Name]/`
+2. **Run import script**: `node scripts/import-artist-images.js`
+3. **Build and preview**: `npm run dev` to view changes
+4. **Deploy**: `npm run build` and push to hosting
 
-### Q3: Lightbox Library Selection
-**Question**: Build custom lightbox or use lightweight library (e.g., PhotoSwipe, GLightbox)?
-
-**Risk**: Custom implementation risks accessibility bugs; libraries add bundle weight and may conflict with Astro islands.
-
-**Next Steps**:
-- Evaluate PhotoSwipe 5.x (~30KB gzip) vs custom implementation (~10KB estimated)
-- Prototype custom lightbox with keyboard/swipe/zoom in isolated island
-- Decision criteria: bundle size + a11y compliance + maintenance effort
-
-### Q4: WebP Fallback Strategy
-**Question**: How should we handle browsers that don't support WebP (Safari <14, IE)?
-
-**Risk**: No fallback = broken images for legacy users; `<picture>` elements increase HTML size.
-
-**Next Steps**:
-- Use Astro's automatic fallback via `<Image />` (generates `<picture>` with WebP + JPG sources)
-- Verify fallback behavior in Safari 13 and Edge Legacy during testing
-- Document browser support matrix in README
-
-### Q5: Performance Budget Enforcement
-**Question**: How do we continuously validate [PRD.md](PRD.md):23-26 success metrics (LCP ≤2.5s, JS <90KB, image bytes ≤700KB)?
-
-**Risk**: Manual testing is unreliable; metrics can regress without CI checks.
-
-**Next Steps**:
-- Add Lighthouse CI to build pipeline with performance budget assertions
-- Implement bundle size monitoring with `astro-bundle-analyzer` (dev dependency)
-- Set up synthetic monitoring (e.g., SpeedCurve, Calibre) for production tracking
-- Create `/lighthouserc.json` with thresholds from PRD success metrics
-
-### Q6: Tag Taxonomy Management
-**Question**: How should tags be normalized (case-sensitive, hyphens, categories)?
-
-**Risk**: Inconsistent tagging creates duplicate tag pages; poor UX for filtering.
-
-**Next Steps**:
-- Define tag schema in Content Collection (lowercase, hyphen-separated, max 3 words)
-- Implement Zod validation to enforce tag format at build time
-- Create `/src/data/tags.json` with official tag list + descriptions for SEO
-- Build tag suggestion UI for content authoring (dev-time only)
-
-### R1: Build Time Scalability
-**Risk**: With 440 high-res images (confirmed in `/SOURCE IMAGES/`), Astro build time may exceed acceptable limits (>5 min)
-
-**Actual Context**: Project has 440 AI-generated character art images ready for migration.
-
-**Mitigation**:
-- Enable `astro:assets` caching to avoid reprocessing unchanged images
-- Use incremental builds if deploying to Vercel/Netlify (only rebuild changed routes)
-- Profile build with `ASTRO_TELEMETRY_DISABLED=1 astro build --verbose` to identify bottlenecks
-- Consider splitting collections across multiple Astro projects if scale demands it
-
-### R2: CLS (Cumulative Layout Shift)
-**Risk**: Grid reflow during image load causes layout shift, hurting Core Web Vitals
-
-**Mitigation**:
-- Always specify `width` and `height` in image frontmatter ([PRD.md](PRD.md):42)
-- Use `aspect-ratio` CSS to reserve space before images load
-- Implement skeleton loaders for image cards ([PRD.md](PRD.md):68)
-- Test with throttled network (Fast 3G) in Chrome DevTools
-
-### R3: SEO for Client-Side Filtering
-**Risk**: Client-side tag filtering means filtered views aren't indexed by search engines
-
-**Mitigation**:
-- Pre-render `/tags/[tag].astro` static pages for all tags (server-side filtering)
-- Use URL params for client-side state (`/gallery?tags=abstract,vibrant`) but link to static tag pages in navigation
-- Implement canonical URLs to prevent duplicate content issues
-- Add JSON-LD `CollectionPage` structured data to tag pages
-
-## Next Steps
-
-1. **Scaffold Project** ([PRD.md](PRD.md):133-163 directory structure)
-   - `npm create astro@latest` with TypeScript + Tailwind template
-   - Configure `astro.config.mjs` with `image` settings and `output: 'static'`
-   - Set up Content Collections schema in `/src/content/config.ts`
-
-2. **Image Pipeline Setup**
-   - Create `/src/images/originals/` with sample images
-   - Test `<Image />` component with responsive sizes and WebP conversion
-   - Validate build output in `/dist/_astro/`
-
-3. **Core Component Development**
-   - Build `ImageCard.astro` with aspect ratio containers and hover states
-   - Implement `GalleryGrid.astro` with CSS masonry layout
-   - Create `Layout.astro` with SEO meta and structured data
-
-4. **Interactive Islands**
-   - Develop `TagFilter.ts` with URL param sync
-   - Implement `SearchBox.ts` with debounced filtering
-   - Build or integrate `Lightbox.ts` (decision pending Q3)
-
-5. **Performance Validation**
-   - Set up Lighthouse CI with budgets from [PRD.md](PRD.md):23-26
-   - Run bundle analysis to verify <90KB JS budget
-   - Test on real mobile devices (4G throttled)
-
-6. **Content Authoring**
-   - Migrate sample images to Content Collections
-   - Document content authoring workflow in README
-   - Create tag taxonomy (answer Q6)
-
-7. **Deployment Setup**
-   - Configure static host (Netlify/Vercel) with build caching
-   - Set up analytics (Plausible/Umami) if desired
-   - Implement monitoring for performance metrics (answer Q5)
+The script automatically:
+- Converts JPG/PNG to WebP
+- Creates artist profile if missing
+- Generates image frontmatter
+- Deletes source files after conversion
+- Organizes images by artist in `/src/images/`

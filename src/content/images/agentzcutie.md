@@ -1,5 +1,6 @@
 ---
-src: "/src/images/originals/agentzcutie.webp"
+artist: "nice-and-satisfying"
+src: "/src/images/nice-and-satisfying/agentzcutie.webp"
 width: 1229
 height: 2048
 ---
