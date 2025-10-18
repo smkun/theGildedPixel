@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/vorloths-phylactery.webp"
+src: "/theGildedPixel/images/draachenmar/vorloths-phylactery.webp"
 width: 1024
 height: 1024
 ---

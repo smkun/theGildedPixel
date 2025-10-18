@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/imre.webp"
+src: "/theGildedPixel/images/draachenmar/imre.webp"
 width: 1024
 height: 1024
 ---

@@ -1,6 +1,6 @@
 ---
 artist: "nice-and-satisfying"
-src: "/src/images/nice-and-satisfying/eugenia.webp"
+src: "/theGildedPixel/images/nice-and-satisfying/eugenia.webp"
 width: 1158
 height: 2048
 ---

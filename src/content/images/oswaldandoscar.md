@@ -1,6 +1,6 @@
 ---
 artist: "32gamers"
-src: "/src/images/32gamers/oswaldandoscar.webp"
+src: "/theGildedPixel/images/32gamers/oswaldandoscar.webp"
 width: 1024
 height: 1024
 ---

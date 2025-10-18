@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/elara-hearhtstone.webp"
+src: "/theGildedPixel/images/draachenmar/elara-hearhtstone.webp"
 width: 1024
 height: 1024
 ---

@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/arburus.webp"
+src: "/theGildedPixel/images/draachenmar/arburus.webp"
 width: 1024
 height: 1024
 ---

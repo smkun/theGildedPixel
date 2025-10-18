@@ -1,6 +1,6 @@
 ---
 artist: "nice-and-satisfying"
-src: "/src/images/nice-and-satisfying/gunslinger.webp"
+src: "/theGildedPixel/images/nice-and-satisfying/gunslinger.webp"
 width: 1158
 height: 2048
 ---

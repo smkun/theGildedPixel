@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/nyble.webp"
+src: "/theGildedPixel/images/draachenmar/nyble.webp"
 width: 1024
 height: 1024
 ---

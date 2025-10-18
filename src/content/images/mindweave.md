@@ -1,6 +1,6 @@
 ---
 artist: "supers"
-src: "/src/images/supers/mindweave.webp"
+src: "/theGildedPixel/images/supers/mindweave.webp"
 width: 1024
 height: 1024
 ---

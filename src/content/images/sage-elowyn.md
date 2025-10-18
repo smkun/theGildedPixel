@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/sage-elowyn.webp"
+src: "/theGildedPixel/images/draachenmar/sage-elowyn.webp"
 width: 1024
 height: 1024
 ---

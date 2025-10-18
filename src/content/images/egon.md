@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/egon.webp"
+src: "/theGildedPixel/images/draachenmar/egon.webp"
 width: 1024
 height: 1024
 ---

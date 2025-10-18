@@ -1,6 +1,6 @@
 ---
 artist: "supers"
-src: "/src/images/supers/blacklotusninja2.webp"
+src: "/theGildedPixel/images/supers/blacklotusninja2.webp"
 width: 1024
 height: 1024
 ---

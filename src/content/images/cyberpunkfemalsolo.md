@@ -1,6 +1,6 @@
 ---
 artist: "supers"
-src: "/src/images/supers/cyberpunkfemalsolo.webp"
+src: "/theGildedPixel/images/supers/cyberpunkfemalsolo.webp"
 width: 768
 height: 1024
 ---

@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/ordek.webp"
+src: "/theGildedPixel/images/draachenmar/ordek.webp"
 width: 1024
 height: 1024
 ---

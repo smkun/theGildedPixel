@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/black-wyrmsteed.webp"
+src: "/theGildedPixel/images/draachenmar/black-wyrmsteed.webp"
 width: 1456
 height: 816
 ---

@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/warrior.webp"
+src: "/theGildedPixel/images/draachenmar/warrior.webp"
 width: 768
 height: 1152
 ---

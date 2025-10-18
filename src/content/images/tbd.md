@@ -1,6 +1,6 @@
 ---
 artist: "supers"
-src: "/src/images/supers/tbd.webp"
+src: "/theGildedPixel/images/supers/tbd.webp"
 width: 1024
 height: 1024
 ---

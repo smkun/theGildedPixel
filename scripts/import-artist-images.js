@@ -222,7 +222,7 @@ async function processArtistFolders() {
     console.log(`   Found ${imageFiles.length} image(s) to convert\n`);
 
     // Create destination directories
-    const destImageDir = join('src/images', artistSlug);
+    const destImageDir = join('public/images', artistSlug);
     const destContentDir = 'src/content/images';
     await mkdir(destImageDir, { recursive: true });
     await mkdir(destContentDir, { recursive: true });
@@ -274,7 +274,7 @@ async function processArtistFolders() {
         // Create content entry
         const content = `---
 artist: "${artistSlug}"
-src: "/src/images/${artistSlug}/${webpFilename}"
+src: "/theGildedPixel/images/${artistSlug}/${webpFilename}"
 width: ${width}
 height: ${height}
 ---

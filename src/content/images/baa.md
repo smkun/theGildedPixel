@@ -1,6 +1,6 @@
 ---
 artist: "supers"
-src: "/src/images/supers/baa.webp"
+src: "/theGildedPixel/images/supers/baa.webp"
 width: 1024
 height: 1024
 ---

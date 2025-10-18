@@ -1,6 +1,6 @@
 ---
 artist: "nice-and-satisfying"
-src: "/src/images/nice-and-satisfying/three.webp"
+src: "/theGildedPixel/images/nice-and-satisfying/three.webp"
 width: 1229
 height: 2048
 ---

@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/ring-of-luminous-valor-v2.webp"
+src: "/theGildedPixel/images/draachenmar/ring-of-luminous-valor-v2.webp"
 width: 1024
 height: 1024
 ---

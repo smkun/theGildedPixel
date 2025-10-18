@@ -1,6 +1,6 @@
 ---
 artist: "supers"
-src: "/src/images/supers/gammabrute.webp"
+src: "/theGildedPixel/images/supers/gammabrute.webp"
 width: 1024
 height: 1024
 ---

@@ -1,6 +1,6 @@
 ---
 artist: "supers"
-src: "/src/images/supers/simon-weiss.webp"
+src: "/theGildedPixel/images/supers/simon-weiss.webp"
 width: 1024
 height: 1024
 ---

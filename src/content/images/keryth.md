@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/keryth.webp"
+src: "/theGildedPixel/images/draachenmar/keryth.webp"
 width: 1024
 height: 1024
 ---

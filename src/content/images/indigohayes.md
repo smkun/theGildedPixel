@@ -1,6 +1,6 @@
 ---
 artist: "supers"
-src: "/src/images/supers/indigohayes.webp"
+src: "/theGildedPixel/images/supers/indigohayes.webp"
 width: 1024
 height: 1024
 ---

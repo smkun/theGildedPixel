@@ -1,6 +1,6 @@
 ---
 artist: "32gamers"
-src: "/src/images/32gamers/female-vampire-2.webp"
+src: "/theGildedPixel/images/32gamers/female-vampire-2.webp"
 width: 1024
 height: 1024
 ---

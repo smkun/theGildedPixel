@@ -1,6 +1,6 @@
 ---
 artist: "draachenmar"
-src: "/src/images/draachenmar/janos-nagy.webp"
+src: "/theGildedPixel/images/draachenmar/janos-nagy.webp"
 width: 1024
 height: 1024
 ---

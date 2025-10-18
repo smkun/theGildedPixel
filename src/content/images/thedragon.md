@@ -1,6 +1,6 @@
 ---
 artist: "supers"
-src: "/src/images/supers/thedragon.webp"
+src: "/theGildedPixel/images/supers/thedragon.webp"
 width: 1024
 height: 1024
 ---
