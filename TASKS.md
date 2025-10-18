@@ -33,14 +33,40 @@ The simplified gallery is **functionally complete** with landing page, artist ga
 
 ## 🎨 Current Sprint: CSS Enhancement
 
-### Visual Polish (In Progress)
-- [ ] Enhance landing page hero/header design - Pending
-- [ ] Improve artist card aesthetics - Pending
-- [ ] Refine gallery grid spacing and flow - Pending
-- [ ] Enhance lightbox UI (backdrop, controls) - Pending
-- [ ] Add subtle animations and transitions - Pending
-- [ ] Improve typography hierarchy - Pending
-- [ ] Refine color palette consistency - Pending
+### Visual Polish (Completed 2025-10-18)
+- [x] Enhance landing page hero/header design - 2025-10-18
+  - Added Playfair Display font for headings with gold gradient
+  - Improved subtitle styling with italic font
+  - Added decorative corner ornaments
+- [x] Improve artist card aesthetics - 2025-10-18
+  - Gallery card shimmer animation on hover
+  - Enhanced hover effects with transform and shadow
+  - Improved overlay design with gradients
+- [x] Refine gallery grid spacing and flow - 2025-10-18
+  - Consistent gap spacing across breakpoints
+  - Gallery grid utilities optimized
+- [x] Enhance lightbox UI (backdrop, controls) - 2025-10-18
+  - Radial gradient backdrop with blur
+  - Improved button styling with gold accents
+  - Fixed arrow positioning to clear filigree borders
+  - Zoom animation on image open
+- [x] Add subtle animations and transitions - 2025-10-18
+  - Fade-in-up animation with stagger for children
+  - Gallery card shimmer effect
+  - Link fancy underline animation
+  - Smooth transitions on all interactive elements
+- [x] Improve typography hierarchy - 2025-10-18
+  - Google Fonts: Playfair Display (headings), Inter (body)
+  - Enhanced heading classes with gold gradient
+  - Refined letter spacing and font weights
+- [x] Refine color palette consistency - 2025-10-18
+  - Enhanced gold palette: #d4af37, #f6c547, #b8992f
+  - Consistent use of CSS custom properties
+  - Improved contrast ratios
+- [x] Add gold filigree decorative borders - 2025-10-18
+  - Repeating vertical borders on left/right
+  - Responsive hiding below 1280px
+  - Body padding to inset content from borders
 
 ---
 

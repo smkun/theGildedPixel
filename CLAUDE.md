@@ -394,3 +394,60 @@ Optional markdown content for extended description.
    - Create `/src/content/config.ts`
    - Define Zod schema with all fields from PRD
    - Add validation rules
+
+---
+
+## Session Summary - 2025-10-18
+
+**Tasks Completed:**
+- [x] Updated documentation to reflect simplified gallery (PLANNING.md, TASKS.md)
+- [x] Enhanced CSS with improved color palette and gold accents
+- [x] Added Google Fonts (Playfair Display + Inter)
+- [x] Implemented gold filigree borders with responsive hiding
+- [x] Fixed lightbox UX issues (arrow interference, accidental closing)
+- [x] Implemented lightbox-only close via X button
+- [x] Fixed mobile lightbox layout with proper control positioning
+- [x] Fixed desktop lightbox image sizing (viewport units instead of percentages)
+- [x] Fixed lightbox arrow positioning to clear filigree borders
+- [x] Changed "artists" to "galleries" on landing page
+
+**CSS Enhancements:**
+- Enhanced color palette with richer gold tones (#d4af37, #f6c547, #b8992f)
+- Gallery card shimmer animation on hover
+- Improved lightbox styling with gradients, backdrop blur, zoom animations
+- Typography enhancements with display font (Playfair Display) and body font (Inter)
+- Link effects with animated underline
+- Fade-in animations with stagger effects
+- Decorative corner ornaments with radial gradients
+
+**Responsive Improvements:**
+- Filigree borders hidden below 1280px (mobile + tablets)
+- Body padding (100px) added at 1280px+ to inset content from filigree
+- Lightbox arrows positioned at 6rem (tablets) and 8rem (desktop) to clear filigree
+- Mobile lightbox: arrows at bottom with 7rem padding for control space
+
+**Decisions Made:**
+- **Filigree breakpoint**: Show at ≥1280px only (not on tablets where it overlaps content)
+- **Body padding**: 100px left/right at ≥1280px creates space between filigree and content
+- **Lightbox sizing**: Use viewport units (90vw, 80vh) instead of percentages for consistent sizing
+- **Arrow positioning**: Responsive positioning with media queries to avoid filigree overlap
+- **Typography**: Playfair Display for elegance, Inter for readability
+
+**Technical Fixes:**
+1. **Lightbox viewport issue**: Changed from `inset: 0` to explicit `width: 100vw, height: 100vh`
+2. **Arrow visibility**: Added `position: fixed !important` and `z-index: 150` to override inheritance
+3. **Image sizing**: Explicit viewport-based max dimensions instead of parent-relative percentages
+4. **Responsive arrows**: Conditional positioning based on screen size
+
+**Issues Resolved:**
+- Lightbox image appearing huge (fixed with viewport units)
+- Arrows not visible on desktop (fixed with z-index and positioning)
+- Arrows under filigree borders (fixed with increased left/right offset)
+- Filigree covering content on tablets (fixed breakpoint to 1280px)
+- Lightbox closing prematurely (removed all click-to-close except X button)
+- Mobile arrow visibility (positioned at bottom with proper spacing)
+
+**Next Session Priorities:**
+1. **Performance testing** - Run Lighthouse audit and optimize for ≥90 score
+2. **SEO meta tags** - Add comprehensive meta, Open Graph, Twitter Cards
+3. **Deployment setup** - Choose hosting (Netlify/Vercel) and configure pipeline

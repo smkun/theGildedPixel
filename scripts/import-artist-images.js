@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile, mkdir, unlink, stat } from 'fs/promises';
+import { readdir, readFile, writeFile, mkdir, unlink, stat, copyFile } from 'fs/promises';
 import { join, basename } from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -51,16 +51,74 @@ function getPNGDimensions(buffer) {
   return { width, height };
 }
 
+// Detect actual image format from file signature
+function detectImageFormat(buffer) {
+  // PNG signature: 89 50 4E 47
+  if (buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E && buffer[3] === 0x47) {
+    return 'png';
+  }
+  // JPEG signature: FF D8
+  if (buffer[0] === 0xFF && buffer[1] === 0xD8) {
+    return 'jpeg';
+  }
+  // WebP signature: RIFF ... WEBP
+  if (buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46 &&
+      buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50) {
+    return 'webp';
+  }
+  return null;
+}
+
+// Simple WebP dimension reader
+function getWebPDimensions(buffer) {
+  // WebP signature: RIFF ... WEBP
+  if (buffer[0] !== 0x52 || buffer[1] !== 0x49 || buffer[2] !== 0x46 || buffer[3] !== 0x46 ||
+      buffer[8] !== 0x57 || buffer[9] !== 0x45 || buffer[10] !== 0x42 || buffer[11] !== 0x50) {
+    throw new Error('Not a WebP file');
+  }
+
+  // VP8 lossy format
+  if (buffer[12] === 0x56 && buffer[13] === 0x50 && buffer[14] === 0x38 && buffer[15] === 0x20) {
+    const width = buffer[26] | (buffer[27] << 8);
+    const height = buffer[28] | (buffer[29] << 8);
+    return { width: width & 0x3fff, height: height & 0x3fff };
+  }
+
+  // VP8L lossless format
+  if (buffer[12] === 0x56 && buffer[13] === 0x50 && buffer[14] === 0x38 && buffer[15] === 0x4C) {
+    const bits = (buffer[21] << 24) | (buffer[22] << 16) | (buffer[23] << 8) | buffer[24];
+    const width = (bits & 0x3FFF) + 1;
+    const height = ((bits >> 14) & 0x3FFF) + 1;
+    return { width, height };
+  }
+
+  // VP8X extended format
+  if (buffer[12] === 0x56 && buffer[13] === 0x50 && buffer[14] === 0x38 && buffer[15] === 0x58) {
+    const width = (buffer[24] | (buffer[25] << 8) | (buffer[26] << 16)) + 1;
+    const height = (buffer[27] | (buffer[28] << 8) | (buffer[29] << 16)) + 1;
+    return { width, height };
+  }
+
+  throw new Error('Unsupported WebP format');
+}
+
 // Get dimensions from any supported image format
 function getImageDimensions(buffer, filename) {
-  const ext = filename.toLowerCase();
+  // Auto-detect format from file signature instead of extension
+  const actualFormat = detectImageFormat(buffer);
 
-  if (ext.endsWith('.png')) {
+  if (!actualFormat) {
+    throw new Error(`Could not detect image format for: ${filename}`);
+  }
+
+  if (actualFormat === 'png') {
     return getPNGDimensions(buffer);
-  } else if (ext.endsWith('.jpg') || ext.endsWith('.jpeg')) {
+  } else if (actualFormat === 'jpeg') {
     return getJPEGDimensions(buffer);
+  } else if (actualFormat === 'webp') {
+    return getWebPDimensions(buffer);
   } else {
-    throw new Error(`Unsupported image format: ${ext}`);
+    throw new Error(`Unsupported image format: ${actualFormat}`);
   }
 }
 
@@ -152,9 +210,9 @@ async function processArtistFolders() {
       console.log(`   Artist profile already exists`);
     }
 
-    // Read all image files (JPG and PNG) in artist folder
+    // Read all image files (JPG, PNG, and WebP) in artist folder
     const files = await readdir(artistSourceDir);
-    const imageFiles = files.filter(f => /\.(jpe?g|png)$/i.test(f));
+    const imageFiles = files.filter(f => /\.(jpe?g|png|webp)$/i.test(f));
 
     if (imageFiles.length === 0) {
       console.log(`   No image files found in this folder`);
@@ -179,7 +237,7 @@ async function processArtistFolders() {
 
     for (const filename of imageFiles) {
       const sourcePath = join(artistSourceDir, filename);
-      const imageSlug = toSlug(filename.replace(/\.(jpe?g|png)$/i, ''));
+      const imageSlug = toSlug(filename.replace(/\.(jpe?g|png|webp)$/i, ''));
       const webpFilename = `${imageSlug}.webp`;
       const destImagePath = join(destImageDir, webpFilename);
       const destContentPath = join(destContentDir, `${imageSlug}.md`);
@@ -192,18 +250,25 @@ async function processArtistFolders() {
       }
 
       try {
-        // Read original image to get dimensions
+        // Read original image to get dimensions and detect format
         const buffer = await readFile(sourcePath);
+        const actualFormat = detectImageFormat(buffer);
         const { width, height } = getImageDimensions(buffer, filename);
 
-        // Convert to WebP
-        console.log(`   Converting: ${filename} → ${webpFilename}`);
-        const success = await convertImage(sourcePath, destImagePath);
+        if (actualFormat === 'webp') {
+          // Already WebP - just copy it
+          console.log(`   Copying: ${filename} → ${webpFilename} (already WebP)`);
+          await copyFile(sourcePath, destImagePath);
+        } else {
+          // Convert JPG/PNG to WebP
+          console.log(`   Converting: ${filename} (${actualFormat.toUpperCase()}) → ${webpFilename}`);
+          const success = await convertImage(sourcePath, destImagePath);
 
-        if (!success) {
-          console.error(`   ❌ Failed to convert ${filename}`);
-          failedCount++;
-          continue;
+          if (!success) {
+            console.error(`   ❌ Failed to convert ${filename}`);
+            failedCount++;
+            continue;
+          }
         }
 
         // Create content entry
