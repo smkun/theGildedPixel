@@ -541,3 +541,132 @@ Optional markdown content for extended description.
 1. **Import remaining artists** - Process all SOURCE IMAGES subfolders
 2. **Performance testing** - Run Lighthouse audit and optimize for ≥90 score
 3. **SEO meta tags** - Add comprehensive meta, Open Graph, Twitter Cards
+
+---
+
+## Session Summary - 2025-10-18 (Part 3: Production Deployment Setup)
+
+**Tasks Completed:**
+- [x] Configured Astro for subdirectory deployment at `/theGildedPixel`
+- [x] Moved images from `src/images/` to `public/images/`
+- [x] Updated all content collection image paths
+- [x] Fixed internal navigation links with base path
+- [x] Updated import script for new directory structure
+- [x] Tested production build successfully
+
+**Production Configuration:**
+
+1. **Astro Config** ([astro.config.mjs:12](astro.config.mjs#L12))
+   - Added `base: '/theGildedPixel'` for subdirectory deployment
+   - Configured for static site generation
+   - All asset paths automatically prefixed with base
+
+2. **Image Structure Migration**
+   - **Old**: `src/images/{artist}/` → Not included in build
+   - **New**: `public/images/{artist}/` → Copied to `dist/images/`
+   - **Result**: All 1001 images now in production build
+
+3. **Content Collection Updates**
+   - Updated 1001 markdown files: `src: "/images/..."` → `src: "/theGildedPixel/images/..."`
+   - Ensures images load correctly at `32Gamers.com/theGildedPixel/`
+
+4. **Navigation Fixes** ([index.astro:7](src/pages/index.astro#L7), [artist/[slug].astro:7](src/pages/artist/[slug].astro#L7))
+   - Added `const base = import.meta.env.BASE_URL` to both pages
+   - Updated artist links: `href={`${base}/artist/${slug}`}`
+   - Updated back link: `href={base}`
+   - All internal navigation now base-path aware
+
+5. **Import Script Updates** ([import-artist-images.js:225,277](scripts/import-artist-images.js#L225))
+   - Destination changed: `public/images/{artist}/`
+   - Image paths include base: `/theGildedPixel/images/{artist}/{image}.webp`
+   - Ready for future artist imports
+
+**Deployment Structure:**
+
+```
+dist/                              Upload contents to: 32Gamers.com/theGildedPixel/
+├── index.html                     → 32Gamers.com/theGildedPixel/
+├── artist/
+│   ├── 32gamers/index.html       → 32Gamers.com/theGildedPixel/artist/32gamers/
+│   ├── draachenmar/index.html
+│   ├── nice-and-satisfying/index.html
+│   └── supers/index.html
+├── images/                        → 32Gamers.com/theGildedPixel/images/
+│   ├── 32gamers/ (228 images)
+│   ├── draachenmar/ (242 images)
+│   ├── nice-and-satisfying/ (444 images)
+│   └── supers/ (87 images)
+├── _astro/                        → 32Gamers.com/theGildedPixel/_astro/
+│   ├── _slug_.RsxQg9K1.css
+│   └── filagre.BknNrKlE.png
+└── favicon.svg
+```
+
+**Build Verification:**
+```bash
+npm run build
+# ✓ 5 pages built successfully
+# ✓ All 1001 images in dist/images/
+# ✓ Links use correct base path: /theGildedPixel/artist/...
+# ✓ Image src paths: /theGildedPixel/images/...
+```
+
+**Deployment Instructions:**
+
+1. **Build the site:**
+   ```bash
+   npm run build
+   ```
+
+2. **Upload `dist/` contents** (NOT the dist folder itself) to your server at:
+   ```
+   32Gamers.com/theGildedPixel/
+   ```
+
+3. **DO NOT upload:**
+   - ❌ `src/` folder
+   - ❌ `node_modules/`
+   - ❌ `public/` folder (contents already in `dist/`)
+   - ❌ `SOURCE IMAGES/` folder
+   - ❌ Project files (package.json, astro.config.mjs, etc.)
+
+4. **Your site will be live at:**
+   - Landing: `https://32Gamers.com/theGildedPixel/`
+   - Artist galleries: `https://32Gamers.com/theGildedPixel/artist/{artist-name}/`
+
+**Files Modified:**
+- [astro.config.mjs](astro.config.mjs) - Added `base: '/theGildedPixel'`
+- [src/pages/index.astro](src/pages/index.astro) - Added base path to links
+- [src/pages/artist/[slug].astro](src/pages/artist/[slug].astro) - Added base path to back link
+- [scripts/import-artist-images.js](scripts/import-artist-images.js) - Updated to `public/images/` with base path
+- All 1001 `.md` files in `src/content/images/` - Updated image src paths
+
+**Technical Details:**
+- **Total size**: `dist/` folder is self-contained production build
+- **Images**: 1001 WebP images (~200-300 MB total)
+- **Pages**: 5 HTML pages (1 landing + 4 artist galleries)
+- **Assets**: CSS, fonts, filigree border image
+
+**Decisions Made:**
+- **Subdirectory deployment**: Site will live at `/theGildedPixel` under main domain
+- **Public folder**: Images moved to `public/` for static file serving
+- **Base path strategy**: Use Astro's `base` config + `import.meta.env.BASE_URL` for links
+- **Self-contained build**: Everything needed is in `dist/`, no external dependencies
+
+**Risks/Considerations:**
+1. **File upload size**: ~200-300 MB of images to upload
+   - Mitigation: Use FTP/SFTP for efficient bulk transfer
+   - Impact: Low - one-time upload, then incremental updates
+
+2. **Base path dependency**: All paths require `/theGildedPixel` prefix
+   - Mitigation: Configured at build time via `astro.config.mjs`
+   - Impact: Low - can change base and rebuild if needed
+
+3. **Artist imports**: Future imports must use updated script
+   - Mitigation: Script already updated to use `public/images/`
+   - Impact: None - script ready for future use
+
+**Next Session Priorities:**
+1. **Upload to production** - Deploy `dist/` to 32Gamers.com/theGildedPixel/
+2. **Verify live site** - Test all links, images, and lightbox functionality
+3. **Performance testing** - Run Lighthouse audit on live site for ≥90 score

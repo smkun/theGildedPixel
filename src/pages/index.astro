@@ -55,8 +55,15 @@ const artistPreviews = artistsWithCounts.map(artist => {
 
 		<div class="container-elegant py-12 fade-in-up">
 			<!-- Header -->
-			<div class="mb-12 stagger-children">
-				<h1 class="text-5xl md:text-6xl heading-gold mb-3">The Gilded Pixel</h1>
+			<div class="mb-12 stagger-children text-center">
+				<!-- Logo -->
+				<div class="mb-6 flex justify-center">
+					<img
+						src={`${base}/theGildedPixel-noBG.png`}
+						alt="The Gilded Pixel"
+						class="w-full max-w-md md:max-w-lg h-auto"
+					/>
+				</div>
 				<p class="subtitle-elegant mb-6">Where prompts meet polish.</p>
 
 				<!-- Total image count with elegant styling -->
@@ -68,7 +75,7 @@ const artistPreviews = artistsWithCounts.map(artist => {
 			<div class="divider-gold"></div>
 
 			<!-- Artist Selection Grid -->
-			<h2 class="text-3xl font-bold text-text mb-8 mt-12">Featured Artists</h2>
+			<h2 class="text-3xl font-bold text-text mb-8 mt-12">Featured Galleries</h2>
 			<div class="gallery-grid gallery-grid-lg">
 				{artistPreviews.map((preview) => (
 					<a

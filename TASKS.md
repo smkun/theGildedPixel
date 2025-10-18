@@ -90,10 +90,13 @@ The simplified gallery is **functionally complete** with landing page, artist ga
 - [ ] Create robots.txt - Not started
 
 ### Deployment
-- [ ] Choose hosting provider (Netlify/Vercel) - Not started
-- [ ] Configure build command - Not started
-- [ ] Set up deployment pipeline - Not started
-- [ ] Configure custom domain (optional) - Not started
+- [x] Configure for subdirectory deployment (/theGildedPixel) - 2025-10-18
+- [x] Move images to public folder for static serving - 2025-10-18
+- [x] Update all image paths with base path - 2025-10-18
+- [x] Fix internal navigation links - 2025-10-18
+- [x] Test production build - 2025-10-18
+- [ ] Upload dist/ to 32Gamers.com/theGildedPixel/ - Not started
+- [ ] Verify live site functionality - Not started
 
 ### Content Expansion
 - [ ] Import remaining artists from SOURCE IMAGES/ - Not started
