@@ -670,3 +670,146 @@ npm run build
 1. **Upload to production** - Deploy `dist/` to 32Gamers.com/theGildedPixel/
 2. **Verify live site** - Test all links, images, and lightbox functionality
 3. **Performance testing** - Run Lighthouse audit on live site for ≥90 score
+
+---
+
+## Session Summary - 2025-10-18 (Part 4: Logo Integration & Final Polish)
+
+**Tasks Completed:**
+- [x] Integrated custom logo to replace text heading
+- [x] Changed "Featured Artists" to "Featured Galleries"
+- [x] Verified filigree image in production build
+- [x] Final production build tested and verified
+
+**Logo Integration:**
+
+1. **Logo Setup** ([index.astro:60-66](src/pages/index.astro#L60-L66))
+   - Added `theGildedPixel-noBG.png` (500x500, 452 KB) to `public/`
+   - Replaced text `<h1>` heading with `<img>` tag
+   - Responsive sizing: `max-w-md` (448px mobile), `md:max-w-lg` (512px desktop)
+   - Centered layout with `text-center` and `flex justify-center`
+   - Base path aware: `src={`${base}/theGildedPixel-noBG.png`}`
+
+2. **Content Updates**
+   - Changed heading from "Featured Artists" to "Featured Galleries"
+   - Maintains consistency with "X images · X galleries" terminology
+   - Logo displays above subtitle "Where prompts meet polish."
+
+**Asset Verification:**
+
+1. **Files in `dist/`:**
+   - ✅ Logo: `dist/theGildedPixel-noBG.png` (452 KB, 500x500 PNG)
+   - ✅ Filigree: `dist/_astro/filagre.BknNrKlE.png` (350 KB, hashed filename)
+   - ✅ CSS: `dist/_astro/_slug_.B8DQ6luu.css` (with filigree reference)
+
+2. **Asset Processing Understanding:**
+   - **`public/` files** → `dist/` root (original filenames, no processing)
+   - **CSS-referenced assets** → `dist/_astro/` (hashed filenames, cache busting)
+   - Logo kept original name since it's in `public/`
+   - Filigree auto-processed by Astro from CSS reference
+
+**Final Build Status:**
+```bash
+npm run build
+# ✓ 5 pages built successfully
+# ✓ All 1001 images in dist/images/
+# ✓ Logo at dist/theGildedPixel-noBG.png
+# ✓ Filigree at dist/_astro/filagre.BknNrKlE.png
+# ✓ All paths use base: /theGildedPixel/
+```
+
+**Files Modified:**
+- [src/pages/index.astro](src/pages/index.astro) - Replaced text heading with logo image
+- [public/theGildedPixel-noBG.png](public/theGildedPixel-noBG.png) - Added logo asset
+
+**Technical Details:**
+- Logo format: PNG with transparent background
+- Logo size: 500x500 pixels, 452 KB
+- Responsive: Scales from 448px (mobile) to 512px (desktop)
+- Accessibility: Alt text "The Gilded Pixel" for screen readers
+
+**Deployment Readiness:**
+✅ Production build complete and verified
+✅ All 1001 images included
+✅ Logo and filigree assets in dist
+✅ All paths base-aware for `/theGildedPixel/`
+✅ Ready for upload to 32Gamers.com
+
+**Next Session Priorities:**
+1. **Upload to production** - Deploy `dist/` contents to 32Gamers.com/theGildedPixel/
+2. **Verify live site** - Test all functionality, images, lightbox, navigation
+3. **Performance audit** - Run Lighthouse on live site, optimize for ≥90 score
+
+---
+
+## Session Summary - 2025-10-18 (Part 5: Session Context Continuation)
+
+**Context:**
+This session was a continuation from a previous conversation that exceeded context limits. The previous session had successfully:
+
+- Configured subdirectory deployment to `/theGildedPixel`
+- Moved images from `src/images/` to `public/images/`
+- Updated all 1001 content collection files with base-aware paths
+- Integrated custom logo (`theGildedPixel-noBG.png`)
+- Changed terminology from "Featured Artists" to "Featured Galleries"
+- Verified production build with all assets included
+
+**Tasks Completed:**
+
+- [x] Session context analysis and documentation
+- [x] Comprehensive summary appended to CLAUDE.md
+- [x] Project state verified and documented
+
+**Session Summary Documentation:**
+Created comprehensive Part 5 summary documenting:
+
+1. **Primary requests**: Deployment preparation, subdirectory configuration, logo integration
+2. **Key technical concepts**: Astro base paths, static asset serving, Content Collections
+3. **Files modified**: astro.config.mjs, index.astro, artist/[slug].astro, import script
+4. **Errors resolved**: Missing slash in links, user confusion about dist structure
+5. **Production readiness**: All assets verified in dist/, ready for deployment
+
+**Project Status:**
+
+- ✅ **Build Complete**: 5 pages, 1001 images, all assets processed
+- ✅ **Configuration Verified**: Base path `/theGildedPixel` working correctly
+- ✅ **Assets Included**: Logo, filigree, all images in dist/
+- ✅ **Navigation Working**: All internal links use base path correctly
+- ✅ **Import Script Ready**: Updated for future artist additions
+
+**Deployment Structure Verified:**
+
+```plaintext
+dist/
+├── index.html                     (Landing page)
+├── artist/                        (4 artist galleries)
+│   ├── 32gamers/
+│   ├── draachenmar/
+│   ├── nice-and-satisfying/
+│   └── supers/
+├── images/                        (1001 WebP images)
+│   ├── 32gamers/ (228)
+│   ├── draachenmar/ (242)
+│   ├── nice-and-satisfying/ (444)
+│   └── supers/ (87)
+├── _astro/                        (CSS + filigree)
+│   ├── _slug_.B8DQ6luu.css
+│   └── filagre.BknNrKlE.png
+├── theGildedPixel-noBG.png        (Logo, 452 KB)
+└── favicon.svg
+```
+
+**Deployment Instructions Confirmed:**
+
+1. Upload **contents** of `dist/` folder (not the folder itself) to server
+2. Destination: `32Gamers.com/theGildedPixel/`
+3. Do NOT upload: `src/`, `node_modules/`, `public/`, `SOURCE IMAGES/`, config files
+4. Site will be live at: `https://32Gamers.com/theGildedPixel/`
+
+**Next Session Priorities:**
+
+1. **Deploy to production** - Upload dist/ contents via FTP/SFTP
+2. **Live site verification** - Test all pages, links, images, lightbox functionality
+3. **Lighthouse audit** - Performance testing on live deployment (target ≥90 score)
+4. **SEO enhancements** - Add meta tags, Open Graph, Twitter Cards (if needed)
+5. **Import remaining artists** - Process any additional SOURCE IMAGES folders
